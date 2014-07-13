@@ -110,7 +110,7 @@ public class Connection extends Thread
             }
             catch (Exception exception)
             {
-                Application.getInstance().getLogger().warning("Error sending package: " + StringUtils.getHexString(dataToSend, length));
+                Application.getInstance().getLogger().warning("Error sending package: " + StringUtils.getHexStringFromByteArray(dataToSend, length));
                 closeConnection();
             }
         }
@@ -180,7 +180,7 @@ public class Connection extends Thread
             }
             catch (Exception exception)
             {
-                Application.getInstance().getLogger().warning("Error processing package: " + StringUtils.getHexString(data, length) + " Ex: " + exception.getMessage());
+                Application.getInstance().getLogger().warning("Error processing package: " + StringUtils.getHexStringFromByteArray(data, length) + " Ex: " + exception.getMessage());
             }
         }
     }
@@ -195,7 +195,7 @@ public class Connection extends Thread
             }
             catch (Exception exception)
             {
-                Application.getInstance().getLogger().warning("Error processing sent package: " + StringUtils.getHexString(data, length) + " Ex: " + exception.getMessage());
+                Application.getInstance().getLogger().warning("Error processing sent package: " + StringUtils.getHexStringFromByteArray(data, length) + " Ex: " + exception.getMessage());
             }
         }
     }

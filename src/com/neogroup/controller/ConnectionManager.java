@@ -178,7 +178,7 @@ public class ConnectionManager implements ConnectionListener
     @Override
     public void onConnectionDataReceived (Connection client, byte[] data, int length)
     {
-        Application.getInstance().getLogger().info("Received from client [" + client + "]: " + StringUtils.getHexString(data, length));
+        Application.getInstance().getLogger().info("Received from client [" + client + "]: " + StringUtils.getHexStringFromByteArray(data, length));
         for (ConnectionListener listener : listeners.getListeners(ConnectionListener.class))
         {
             try
@@ -187,7 +187,7 @@ public class ConnectionManager implements ConnectionListener
             }
             catch (Exception exception)
             {
-                Application.getInstance().getLogger().warning("Error processing package: " + StringUtils.getHexString(data, length) + " Ex: " + exception.getMessage());
+                Application.getInstance().getLogger().warning("Error processing package: " + StringUtils.getHexStringFromByteArray(data, length) + " Ex: " + exception.getMessage());
             }
         }
     }
@@ -203,9 +203,9 @@ public class ConnectionManager implements ConnectionListener
             }
             catch (Exception exception)
             {
-                Application.getInstance().getLogger().warning("Error processing sent package: " + StringUtils.getHexString(data, length) + " Ex: " + exception.getMessage());
+                Application.getInstance().getLogger().warning("Error processing sent package: " + StringUtils.getHexStringFromByteArray(data, length) + " Ex: " + exception.getMessage());
             }
         }
-        Application.getInstance().getLogger().info("Sent to client [" + client + "]: " + StringUtils.getHexString(data, length));
+        Application.getInstance().getLogger().info("Sent to client [" + client + "]: " + StringUtils.getHexStringFromByteArray(data, length));
     }
 }
