@@ -76,7 +76,8 @@ public class TT8750DeviceProcessor extends Processor implements ConnectionListen
                     int odometer = (ord(data[44]) + (ord(data[43]) << 8) + (ord(data[42]) << 16) + (ord(data[41]) << 24)) / 10;
                     Calendar date = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     date.set(ord(data[45])+2000, ord(data[46]) - 1, ord(data[47]), ord(data[48]), ord(data[49]), ord(data[50]));
-                    
+                    long dateTime = date.getTimeInMillis() / 1000;
+                            
                     StringBuilder reportJson = new StringBuilder();
                     reportJson.append('{');
                     reportJson.append("\"reportClassTypeId\": ").append(1);
@@ -89,7 +90,7 @@ public class TT8750DeviceProcessor extends Processor implements ConnectionListen
                     reportJson.append(",\"course\": ").append(course);
                     reportJson.append(",\"altitude\": ").append(altitude);
                     reportJson.append(",\"odometer\": ").append(odometer);
-                    reportJson.append(",\"date\": ").append(date.getTimeInMillis());
+                    reportJson.append(",\"date\": ").append(dateTime);
                     reportJson.append('}');
                     
                     Runtime.getRuntime().exec(new String[] {"php", "../../NeoGroup/command.php", "reports/createResource", reportJson.toString()});
