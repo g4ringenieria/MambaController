@@ -64,16 +64,27 @@ public class TT8750DeviceProcessor extends Processor implements ConnectionListen
                     idField.append((char)data[21]);
                     idField.append((char)data[22]);
                     int deviceId = Integer.parseInt(idField.toString());
+                    System.out.println (deviceId);
                     int eventId = ord(data[14]) + (ord(data[13]) << 8);
+                    System.out.println (eventId);
                     int reportTypeId = getReportTypeByEvent(eventId);
+                    System.out.println (reportTypeId);
                     int ios = ord(data[24]) + (ord(data[23]) << 8);
+                    System.out.println (ios);
                     int validity = ord(data[25]);
+                    System.out.println (validity);
                     double latitude = getCoordinate(data[26], data[27], data[28], data[29]);
+                    System.out.println (latitude);
                     double longitude = getCoordinate(data[30], data[31], data[32], data[33]);
+                    System.out.println (longitude);
                     double speed = ((ord(data[35]) + (ord(data[34]) << 8)) / 10) * 1.8;
+                    System.out.println (speed);
                     int course = ((ord(data[37]) + (ord(data[36]) << 8)) / 10);
+                    System.out.println (course);
                     int altitude = (ord(data[40]) + (ord(data[39]) << 8) + (ord(data[38]) << 16)) / 10;
+                    System.out.println (altitude);
                     int odometer = (ord(data[44]) + (ord(data[43]) << 8) + (ord(data[42]) << 16) + (ord(data[41]) << 24)) / 10;
+                    System.out.println (odometer);
                     Calendar date = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     date.set(ord(data[45])+2000, ord(data[46]) - 1, ord(data[47]), ord(data[48]), ord(data[49]), ord(data[50]));
                     
