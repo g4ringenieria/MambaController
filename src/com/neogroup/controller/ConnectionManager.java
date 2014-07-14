@@ -115,12 +115,12 @@ public class ConnectionManager implements ConnectionListener
             connection.sendData(data);
     }
     
-    public Connection getConnectionByIdentifier (int clientId)
+    public Connection getConnectionByIdentifier (int connectionIdentifier)
     {
         Connection identifierConnection = null;
         for (Connection connection : connections)
         {
-            if (connection.getIdentifier() == clientId)
+            if (connection.getIdentifier() == connectionIdentifier)
             {
                 identifierConnection = connection;
                 break;
@@ -140,50 +140,50 @@ public class ConnectionManager implements ConnectionListener
     }
     
     @Override
-    public void onConnectionStarted (Connection client)
+    public void onConnectionStarted (Connection connection)
     {
-        connections.add(client);
+        connections.add(connection);
         for (ConnectionListener listener : listeners.getListeners(ConnectionListener.class))
         {
             try
             {
-                listener.onConnectionStarted(client);
+                listener.onConnectionStarted(connection);
             }
             catch (Exception exception)
             {
                 Application.getInstance().getLogger().warning("Error processing connection Started. Ex: " + exception.getMessage());
             }
         }
-        Application.getInstance().getLogger().info("Client [" + client + "] connected !!");
+        Application.getInstance().getLogger().info("Connection [" + connection + "] connected !!");
     }
 
     @Override
-    public void onConnectionEnded (Connection client)
+    public void onConnectionEnded (Connection connection)
     {
-        connections.remove(client);        
+        connections.remove(connection);        
         for (ConnectionListener listener : listeners.getListeners(ConnectionListener.class))
         {
             try
             {
-                listener.onConnectionEnded(client);
+                listener.onConnectionEnded(connection);
             }
             catch (Exception exception)
             {
                 Application.getInstance().getLogger().warning("Error processing connection Ended. Ex: " + exception.getMessage());
             }
         }
-        Application.getInstance().getLogger().info("Client [" + client + "] disconnected !!");
+        Application.getInstance().getLogger().info("Connection [" + connection + "] disconnected !!");
     }
 
     @Override
-    public void onConnectionDataReceived (Connection client, byte[] data, int length)
+    public void onConnectionDataReceived (Connection connection, byte[] data, int length)
     {
-        Application.getInstance().getLogger().info("Received from client [" + client + "]: " + StringUtils.getHexStringFromByteArray(data, length));
+        Application.getInstance().getLogger().info("Received from connection [" + connection + "]: " + StringUtils.getHexStringFromByteArray(data, length));
         for (ConnectionListener listener : listeners.getListeners(ConnectionListener.class))
         {
             try
             {
-                listener.onConnectionDataReceived(client, data, length);
+                listener.onConnectionDataReceived(connection, data, length);
             }
             catch (Exception exception)
             {
@@ -193,19 +193,19 @@ public class ConnectionManager implements ConnectionListener
     }
 
     @Override
-    public void onConnectionDataSent (Connection client, byte[] data, int length)
+    public void onConnectionDataSent (Connection connection, byte[] data, int length)
     {
         for (ConnectionListener listener : listeners.getListeners(ConnectionListener.class))
         {
             try
             {
-                listener.onConnectionDataSent(client, data, length);
+                listener.onConnectionDataSent(connection, data, length);
             }
             catch (Exception exception)
             {
                 Application.getInstance().getLogger().warning("Error processing sent package: " + StringUtils.getHexStringFromByteArray(data, length) + " Ex: " + exception.getMessage());
             }
         }
-        Application.getInstance().getLogger().info("Sent to client [" + client + "]: " + StringUtils.getHexStringFromByteArray(data, length));
+        Application.getInstance().getLogger().info("Sent to connection [" + connection + "]: " + StringUtils.getHexStringFromByteArray(data, length));
     }
 }
