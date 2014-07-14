@@ -91,7 +91,8 @@ public class TT8750DeviceProcessor extends Processor implements ConnectionListen
                     reportJson.append(",\"odometer\": ").append(odometer);
                     reportJson.append(",\"date\": ").append(date.getTimeInMillis());
                     reportJson.append('}');
-                    Runtime.getRuntime().exec("php ../../NeoGroup/command.php reports/createResource '" + reportJson.toString() + "'");
+                    
+                    Runtime.getRuntime().exec(new String[] {"php", "../../NeoGroup/command.php", "reports/createResource", reportJson.toString()});
                 }
                 break;
             case DATAGRAMTYPE_SERIALPORT:
