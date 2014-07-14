@@ -42,7 +42,6 @@ public class Application
     
     private Application ()
     {
-        logger = createLogger();
         connection = new ConnectionManager();
         console = new ConsoleManager();
         processors = new ArrayList<Processor>();
@@ -93,20 +92,6 @@ public class Application
         getLogger().info("Controller finalized !!");
     }
     
-    private Logger createLogger ()
-    {
-        Logger logger = Logger.getLogger(this.getClass().getName());
-        try
-        {   
-            FileHandler handler = new FileHandler("log_" + getType() + ".txt", 1024000, 1, true);
-            handler.setFormatter(new SimpleFormatter());
-            logger.setUseParentHandlers(false);
-            logger.addHandler(handler);
-        } 
-        catch (Exception e){e.printStackTrace();}
-        return logger;
-    }
-    
     public ConnectionManager getConnection ()
     {
         return connection;
@@ -119,6 +104,18 @@ public class Application
     
     public Logger getLogger ()
     {   
+        if (logger == null)
+        {
+            logger = Logger.getLogger(this.getClass().getName());
+            try
+            {   
+                FileHandler handler = new FileHandler("log_" + getType() + ".txt", 1024000, 1, true);
+                handler.setFormatter(new SimpleFormatter());
+                logger.setUseParentHandlers(false);
+                logger.addHandler(handler);
+            } 
+            catch (Exception e){e.printStackTrace();}
+        }
         return logger;
     }
 
