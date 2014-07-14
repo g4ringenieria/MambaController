@@ -212,9 +212,9 @@ public class Connection extends Thread
 
     public interface ConnectionListener extends EventListener
     {
-        public void onConnectionStarted (Connection connection);
-        public void onConnectionEnded (Connection connection);
-        public void onConnectionDataReceived (Connection connection, byte[] data, int length);
-        public void onConnectionDataSent (Connection connection, byte[] data, int length);
+        public void onConnectionStarted (Connection connection) throws Exception;
+        public void onConnectionEnded (Connection connection) throws Exception;
+        public void onConnectionDataReceived (Connection connection, byte[] data, int length) throws Exception;
+        public void onConnectionDataSent (Connection connection, byte[] data, int length) throws Exception;
     }
 }

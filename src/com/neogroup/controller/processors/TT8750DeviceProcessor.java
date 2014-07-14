@@ -27,17 +27,17 @@ public class TT8750DeviceProcessor extends Processor implements ConnectionListen
     }
 
     @Override
-    public void onConnectionStarted(Connection connection) 
+    public void onConnectionStarted(Connection connection) throws Exception
     {    
     }
 
     @Override
-    public void onConnectionEnded(Connection connection) 
+    public void onConnectionEnded(Connection connection) throws Exception
     {
     }
 
     @Override
-    public void onConnectionDataReceived(Connection connection, byte[] data, int length) 
+    public void onConnectionDataReceived(Connection connection, byte[] data, int length) throws Exception
     {
         int datagramType = ord(data[4]);
        
@@ -79,7 +79,7 @@ public class TT8750DeviceProcessor extends Processor implements ConnectionListen
                     
                     StringBuilder reportJson = new StringBuilder();
                     reportJson.append('{');
-                    reportJson.append("\"reportClassType\": ").append(1);
+                    reportJson.append("\"reportClassTypeId\": ").append(1);
                     reportJson.append(",\"reportTypeId\": ").append(reportTypeId);
                     reportJson.append(",\"deviceId\": ").append(deviceId);
                     reportJson.append(",\"validity\": ").append(validity);
@@ -91,8 +91,7 @@ public class TT8750DeviceProcessor extends Processor implements ConnectionListen
                     reportJson.append(",\"odometer\": ").append(odometer);
                     reportJson.append(",\"date\": ").append(date.getTimeInMillis());
                     reportJson.append('}');
-                    Application.getInstance().getLogger().fine(reportJson.toString());
-//                    Runtime.getRuntime().exec("php ../../NeoGroup/command.php " + reportJson.toString());
+                    Runtime.getRuntime().exec("php ../../NeoGroup/command.php reports/createResource '" + reportJson.toString() + "'");
                 }
                 break;
             case DATAGRAMTYPE_SERIALPORT:
@@ -107,7 +106,7 @@ public class TT8750DeviceProcessor extends Processor implements ConnectionListen
     }
 
     @Override
-    public void onConnectionDataSent(Connection client, byte[] data, int length) 
+    public void onConnectionDataSent(Connection client, byte[] data, int length) throws Exception
     {
     }
     
