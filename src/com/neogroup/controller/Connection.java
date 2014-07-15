@@ -205,6 +205,7 @@ public class Connection extends Thread
     public String toString ()
     {
         String connectionId = "";
+        connectionId += "[" + this.getId() + "]=>";
         connectionId += (this.identifier > 0)? this.identifier : "?";
         connectionId += "@";
         connectionId += this.socketAddress;

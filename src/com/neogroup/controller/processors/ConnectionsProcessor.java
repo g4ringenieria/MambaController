@@ -46,20 +46,29 @@ public class ConnectionsProcessor extends Processor implements ConsoleManager.Co
         }
         else if (command.equals("sendConnection") || command.equals("sc"))
         {
-            int connectionIdentifierIndex = commandArguments.indexOf("-c") + 1;
+            int connectionIdentifierIndex = commandArguments.indexOf("-i") + 1;
+            int connectionIdIndex = commandArguments.indexOf("-c") + 1;
             int messageIndex = commandArguments.indexOf("-m") + 1;
-            if (connectionIdentifierIndex == 0 || messageIndex == 0)
+            if ((connectionIdentifierIndex == 0 && connectionIdIndex == 0) || messageIndex == 0)
             {
-                System.out.println ("USAGE: sendConnection [OPTIONS] -c 10064 -m \"hello world\"");
+                System.out.println ("USAGE: sendConnection [OPTIONS] -i 10064 -m \"hello world\"");
             }
             else
             {
                 try
                 {
-                    int connectionIdentifier = Integer.parseInt(commandArguments.get(connectionIdentifierIndex));
                     String message = commandArguments.get(messageIndex);
                     byte[] data = (commandArguments.indexOf("--hex") >= 0)? StringUtils.getByteArrayFromHexString(message) : message.getBytes();
-                    Application.getInstance().getConnectionManager().sendToConnection(connectionIdentifier, data);
+                    if (connectionIdentifierIndex > 0)
+                    {
+                        int connectionIdentifier = Integer.parseInt(commandArguments.get(connectionIdentifierIndex));    
+                        Application.getInstance().getConnectionManager().sendToConnectionIdentifier(connectionIdentifier, data);
+                    }
+                    else 
+                    {
+                        int connectionId = Integer.parseInt(commandArguments.get(connectionIdIndex));
+                        Application.getInstance().getConnectionManager().sendToConnection(connectionId, data);
+                    }
                     System.out.println ("Message sent succesfully !!");
                 }
                 catch (Exception ex)
@@ -70,17 +79,26 @@ public class ConnectionsProcessor extends Processor implements ConsoleManager.Co
         }
         else if (command.equals("closeConnection") || command.equals("cc"))
         {
-            int connectionIdentifierIndex = commandArguments.indexOf("-c") + 1;
-            if (connectionIdentifierIndex == 0)
+            int connectionIdentifierIndex = commandArguments.indexOf("-i") + 1;
+            int connectionIdIndex = commandArguments.indexOf("-c") + 1;
+            if (connectionIdentifierIndex == 0 && connectionIdIndex == 0)
             {
-                System.out.println ("USAGE: closeConnection -c 10064");
+                System.out.println ("USAGE: closeConnection -i 10064");
             }
             else
             {
                 try
                 {
-                    int connectionIdentifier = Integer.parseInt(commandArguments.get(connectionIdentifierIndex));
-                    Application.getInstance().getConnectionManager().closeConnection(connectionIdentifier);
+                    if (connectionIdentifierIndex > 0)
+                    {
+                        int connectionIdentifier = Integer.parseInt(commandArguments.get(connectionIdentifierIndex));
+                        Application.getInstance().getConnectionManager().closeConnectionIdentifier(connectionIdentifier);
+                    }
+                    else
+                    {
+                        int connectionId = Integer.parseInt(commandArguments.get(connectionIdIndex));
+                        Application.getInstance().getConnectionManager().closeConnection(connectionId);
+                    }
                     System.out.println ("Connection closed succesfully !!");
                 }
                 catch (Exception ex)

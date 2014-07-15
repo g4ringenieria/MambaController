@@ -108,7 +108,7 @@ public class ConnectionManager implements ConnectionListener
         }
     }
     
-    public void sendToConnection (int identifier, byte[] data) throws Exception
+    public void sendToConnectionIdentifier (int identifier, byte[] data) throws Exception
     {
         Connection connection = getConnectionByIdentifier(identifier);
         if (connection != null)
@@ -121,12 +121,25 @@ public class ConnectionManager implements ConnectionListener
         }
     }
     
+    public void sendToConnection (int id, byte[] data) throws Exception
+    {
+        Connection connection = getConnection(id);
+        if (connection != null)
+        {
+            sendToConnection(connection, data);
+        }
+        else
+        {
+            throw new Exception ("Connection  \"" + id + "\" not found !!");
+        }
+    }
+    
     public void sendToConnection (Connection connection, byte[] data) throws Exception
     {
         connection.sendData(data);
     }
     
-    public void closeConnection (int identifier) throws Exception
+    public void closeConnectionIdentifier (int identifier) throws Exception
     {
         Connection connection = getConnectionByIdentifier(identifier);
         if (connection != null)
@@ -136,6 +149,19 @@ public class ConnectionManager implements ConnectionListener
         else
         {
             throw new Exception ("Connection with identifier \"" + identifier + "\" not found !!");
+        }
+    }
+    
+    public void closeConnection (int id) throws Exception
+    {
+        Connection connection = getConnection(id);
+        if (connection != null)
+        {
+            closeConnection(connection);
+        }
+        else
+        {
+            throw new Exception ("Connection \"" + id + "\" not found !!");
         }
     }
     
@@ -164,6 +190,23 @@ public class ConnectionManager implements ConnectionListener
             }
         }
         return identifierConnection;
+    }
+    
+    public Connection getConnection (int connectionId)
+    {
+        Connection foundConnection = null;
+        synchronized (connections)
+        {
+            for (Connection connection : connections)
+            {
+                if (connection.getId() == connectionId)
+                {
+                    foundConnection = connection;
+                    break;
+                }
+            }
+        }
+        return foundConnection;
     }
 
     public void addConnectionListener(ConnectionListener listener)
