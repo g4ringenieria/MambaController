@@ -13,7 +13,7 @@ public class ConnectionManager implements ConnectionListener
 {
     protected EventListenerList listeners = new EventListenerList();
     private ServerSocket serverSocket;
-    private List<Connection> connections;
+    private final List<Connection> connections;
     private boolean active;
     private boolean logging;
     private int port;
@@ -111,19 +111,21 @@ public class ConnectionManager implements ConnectionListener
     
     public void sendToConnection (Connection connection, byte[] data)
     {
-        if (connections.indexOf(connection) >= 0)
-            connection.sendData(data);
+        connection.sendData(data);
     }
     
     public Connection getConnectionByIdentifier (int connectionIdentifier)
     {
         Connection identifierConnection = null;
-        for (Connection connection : connections)
+        synchronized (connections)
         {
-            if (connection.getIdentifier() == connectionIdentifier)
+            for (Connection connection : connections)
             {
-                identifierConnection = connection;
-                break;
+                if (connection.getIdentifier() == connectionIdentifier)
+                {
+                    identifierConnection = connection;
+                    break;
+                }
             }
         }
         return identifierConnection;
@@ -142,7 +144,10 @@ public class ConnectionManager implements ConnectionListener
     @Override
     public void onConnectionStarted (Connection connection)
     {
-        connections.add(connection);
+        synchronized (connections)
+        {
+            connections.add(connection);
+        }
         for (ConnectionListener listener : listeners.getListeners(ConnectionListener.class))
         {
             try
@@ -160,7 +165,10 @@ public class ConnectionManager implements ConnectionListener
     @Override
     public void onConnectionEnded (Connection connection)
     {
-        connections.remove(connection);        
+        synchronized (connections)
+        {
+            connections.remove(connection);
+        }
         for (ConnectionListener listener : listeners.getListeners(ConnectionListener.class))
         {
             try
