@@ -126,6 +126,24 @@ public class ConnectionManager implements ConnectionListener
         connection.sendData(data);
     }
     
+    public void closeConnection (int identifier) throws Exception
+    {
+        Connection connection = getConnectionByIdentifier(identifier);
+        if (connection != null)
+        {
+            closeConnection(connection);
+        }
+        else
+        {
+            throw new Exception ("Connection with identifier \"" + identifier + "\" not found !!");
+        }
+    }
+    
+    public void closeConnection (Connection connection)
+    {
+        connection.closeConnection();
+    }
+    
     public List<Connection> getConnections()
     {
         return connections;

@@ -54,17 +54,38 @@ public class ConnectionsProcessor extends Processor implements ConsoleManager.Co
             }
             else
             {
-                int connectionIdentifier = Integer.parseInt(commandArguments.get(connectionIdentifierIndex));
-                String message = commandArguments.get(messageIndex);
-                byte[] data = (commandArguments.indexOf("--hex") >= 0)? StringUtils.getByteArrayFromHexString(message) : message.getBytes();
                 try
                 {
+                    int connectionIdentifier = Integer.parseInt(commandArguments.get(connectionIdentifierIndex));
+                    String message = commandArguments.get(messageIndex);
+                    byte[] data = (commandArguments.indexOf("--hex") >= 0)? StringUtils.getByteArrayFromHexString(message) : message.getBytes();
                     Application.getInstance().getConnectionManager().sendToConnection(connectionIdentifier, data);
                     System.out.println ("Message sent succesfully !!");
                 }
                 catch (Exception ex)
                 {
                     System.out.println ("Error sending the message: " + ex.getMessage());
+                }
+            }
+        }
+        else if (command.equals("closeConnection") || command.equals("cc"))
+        {
+            int connectionIdentifierIndex = commandArguments.indexOf("-c") + 1;
+            if (connectionIdentifierIndex == 0)
+            {
+                System.out.println ("USAGE: closeConnection -c 10064");
+            }
+            else
+            {
+                try
+                {
+                    int connectionIdentifier = Integer.parseInt(commandArguments.get(connectionIdentifierIndex));
+                    Application.getInstance().getConnectionManager().closeConnection(connectionIdentifier);
+                    System.out.println ("Connection closed succesfully !!");
+                }
+                catch (Exception ex)
+                {
+                    System.out.println ("Error closing connection: " + ex.getMessage());
                 }
             }
         }
