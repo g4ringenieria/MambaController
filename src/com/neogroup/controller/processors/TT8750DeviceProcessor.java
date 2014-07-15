@@ -144,7 +144,7 @@ public class TT8750DeviceProcessor extends Processor implements ConnectionListen
         int reportType = 0;
         switch (eventId)
         {
-            case 21: reportType = 1; break;
+            case 21: reportType = 2; break;
         }
         return reportType;
     }
