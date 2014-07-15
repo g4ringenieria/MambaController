@@ -47,7 +47,8 @@ public class ConsoleManager
     public void processCommand (String command)
     {
         List<String> commandTokens = ConsoleUtils.parseCommand(command);
-        fireConsoleEvent (command, commandTokens);
+        if (commandTokens.size() > 0)
+            fireConsoleEvent (commandTokens.get(0), commandTokens.subList(1, commandTokens.size()));
     }
     
     public void addConsoleListener(ConsoleListener listener)
@@ -68,6 +69,6 @@ public class ConsoleManager
     
     public interface ConsoleListener extends EventListener
     {
-        public void onCommandEntered (String command, List<String> commandTokens);
+        public void onCommandEntered (String command, List<String> commandArguments);
     }
 }

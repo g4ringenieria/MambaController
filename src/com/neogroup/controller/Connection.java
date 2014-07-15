@@ -94,12 +94,12 @@ public class Connection extends Thread
         }
     }
     
-    public void sendData (byte[] dataToSend)
+    public void sendData (byte[] dataToSend) throws Exception
     {
         sendData(dataToSend, dataToSend.length);
     }
     
-    public void sendData (byte[] dataToSend, int length)
+    public void sendData (byte[] dataToSend, int length) throws Exception
     {
         if (output != null)
         {
@@ -112,6 +112,7 @@ public class Connection extends Thread
             {
                 Application.getInstance().getLogger().warning("Error sending package: " + StringUtils.getHexStringFromByteArray(dataToSend, length));
                 closeConnection();
+                throw exception;
             }
         }
     }

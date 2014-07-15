@@ -20,7 +20,7 @@ public class GeneralProcessor extends Processor implements ConsoleManager.Consol
     }
 
     @Override
-    public void onCommandEntered(String command, List<String> commandTokens)
+    public void onCommandEntered(String command, List<String> commandArguments)
     {
         if (command.equals("exit"))
         {

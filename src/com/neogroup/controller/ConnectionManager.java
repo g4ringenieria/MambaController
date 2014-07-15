@@ -108,14 +108,20 @@ public class ConnectionManager implements ConnectionListener
         }
     }
     
-    public void sendToConnection (int identifier, byte[] data)
+    public void sendToConnection (int identifier, byte[] data) throws Exception
     {
         Connection connection = getConnectionByIdentifier(identifier);
         if (connection != null)
+        {
             sendToConnection(connection, data);
+        }
+        else
+        {
+            throw new Exception ("Connection with identifier \"" + identifier + "\" not found !!");
+        }
     }
     
-    public void sendToConnection (Connection connection, byte[] data)
+    public void sendToConnection (Connection connection, byte[] data) throws Exception
     {
         connection.sendData(data);
     }
