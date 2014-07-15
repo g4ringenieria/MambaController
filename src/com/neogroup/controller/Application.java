@@ -1,6 +1,7 @@
 
 package com.neogroup.controller;
 
+import com.neogroup.controller.processors.ConnectionsProcessor;
 import com.neogroup.controller.processors.TT8750DeviceProcessor;
 import com.neogroup.controller.processors.GeneralProcessor;
 import com.neogroup.controller.processors.Processor;
@@ -46,6 +47,7 @@ public class Application
         console = new ConsoleManager();
         processors = new ArrayList<Processor>();
         processors.add(new GeneralProcessor());
+        processors.add(new ConnectionsProcessor());
         processors.add(new TT8750DeviceProcessor());
     }
     

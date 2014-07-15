@@ -58,36 +58,39 @@ public class ConnectionManager implements ConnectionListener
     
     private void startConnectionThread ()
     {
-        connectionThread = new Thread()
+        if (connectionThread == null)
         {
-            @Override
-            public void run()
+            connectionThread = new Thread()
             {
-                active = true;
-                Application.getInstance().getLogger().info("ConnectionManager started !!");
-                while (active)
+                @Override
+                public void run()
                 {
-                    try 
+                    active = true;
+                    Application.getInstance().getLogger().info("ConnectionManager started !!");
+                    while (active)
                     {
-                        serverSocket = new ServerSocket(port);
-                        while (active)
+                        try 
                         {
-                            Socket connectionSocket = serverSocket.accept();
-                            Connection connection = new Connection(ConnectionManager.this, connectionSocket);
-                            connection.addConnectionListener(ConnectionManager.this);
-                            connection.start();
+                            serverSocket = new ServerSocket(port);
+                            while (active)
+                            {
+                                Socket connectionSocket = serverSocket.accept();
+                                Connection connection = new Connection(ConnectionManager.this, connectionSocket);
+                                connection.addConnectionListener(ConnectionManager.this);
+                                connection.start();
+                            }
+                        } 
+                        catch (Exception e) 
+                        {
+                            if (active)
+                                try { Thread.sleep(10000); } catch (Exception ex) {}
                         }
-                    } 
-                    catch (Exception e) 
-                    {
-                        if (active)
-                            try { Thread.sleep(10000); } catch (Exception ex) {}
                     }
+                    Application.getInstance().getLogger().info("ConnectionManager stopped !!");
                 }
-                Application.getInstance().getLogger().info("ConnectionManager stopped !!");
-            }
-        };
-        connectionThread.start();
+            };
+            connectionThread.start();
+        }
     }
     
     private void stopConnectionThread ()
@@ -99,7 +102,10 @@ public class ConnectionManager implements ConnectionListener
             serverSocket = null;
         }
         if (connectionThread != null)
+        {
             try { connectionThread.join(); } catch (Exception ex) {}
+            connectionThread = null;
+        }
     }
     
     public void sendToConnection (int identifier, byte[] data)
@@ -112,6 +118,11 @@ public class ConnectionManager implements ConnectionListener
     public void sendToConnection (Connection connection, byte[] data)
     {
         connection.sendData(data);
+    }
+    
+    public List<Connection> getConnections()
+    {
+        return connections;
     }
     
     public Connection getConnectionByIdentifier (int connectionIdentifier)
