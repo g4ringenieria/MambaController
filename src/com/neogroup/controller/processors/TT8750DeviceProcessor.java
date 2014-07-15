@@ -16,14 +16,14 @@ public class TT8750DeviceProcessor extends Processor implements ConnectionListen
     public void start() 
     {
         if (Application.getInstance().getType() == 1)
-            Application.getInstance().getConnection().addConnectionListener(this);
+            Application.getInstance().getConnectionManager().addConnectionListener(this);
     }
 
     @Override
     public void stop() 
     {
         if (Application.getInstance().getType() == 1)
-            Application.getInstance().getConnection().removeConnectionListener(this);
+            Application.getInstance().getConnectionManager().removeConnectionListener(this);
     }
 
     @Override

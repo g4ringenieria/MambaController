@@ -10,13 +10,13 @@ public class GeneralProcessor extends Processor implements ConsoleManager.Consol
     @Override
     public void start()
     {
-        Application.getInstance().getConsole().addConsoleListener(this);
+        Application.getInstance().getConsoleManager().addConsoleListener(this);
     }
 
     @Override
     public void stop()
     {
-        Application.getInstance().getConsole().removeConsoleListener(this);
+        Application.getInstance().getConsoleManager().removeConsoleListener(this);
     }
 
     @Override

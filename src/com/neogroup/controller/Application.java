@@ -32,7 +32,7 @@ public class Application
             int type = Integer.parseInt(args[0]);
             int port = Integer.parseInt(args[1]);
             getInstance().setType(type);
-            getInstance().getConnection().setPort(port);
+            getInstance().getConnectionManager().setPort(port);
             getInstance().start();   
         }
         catch (Exception ex)
@@ -94,12 +94,12 @@ public class Application
         getLogger().info("Controller finalized !!");
     }
     
-    public ConnectionManager getConnection ()
+    public ConnectionManager getConnectionManager ()
     {
         return connection;
     }
     
-    public ConsoleManager getConsole ()
+    public ConsoleManager getConsoleManager ()
     {
         return console;
     }
