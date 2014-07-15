@@ -148,6 +148,8 @@ public class ConnectionManager implements ConnectionListener
         {
             connections.add(connection);
         }
+        if (logging)
+            Application.getInstance().getLogger().info("Connection [" + connection + "] connected !!");
         for (ConnectionListener listener : listeners.getListeners(ConnectionListener.class))
         {
             try
@@ -159,7 +161,6 @@ public class ConnectionManager implements ConnectionListener
                 Application.getInstance().getLogger().warning("Error processing connection Started. Ex: " + exception.getMessage());
             }
         }
-        Application.getInstance().getLogger().info("Connection [" + connection + "] connected !!");
     }
 
     @Override
@@ -169,6 +170,8 @@ public class ConnectionManager implements ConnectionListener
         {
             connections.remove(connection);
         }
+        if (logging)
+            Application.getInstance().getLogger().info("Connection [" + connection + "] disconnected !!");
         for (ConnectionListener listener : listeners.getListeners(ConnectionListener.class))
         {
             try
@@ -180,13 +183,13 @@ public class ConnectionManager implements ConnectionListener
                 Application.getInstance().getLogger().warning("Error processing connection Ended. Ex: " + exception.getMessage());
             }
         }
-        Application.getInstance().getLogger().info("Connection [" + connection + "] disconnected !!");
     }
 
     @Override
     public void onConnectionDataReceived (Connection connection, byte[] data, int length)
     {
-        Application.getInstance().getLogger().info("Received from connection [" + connection + "]: " + StringUtils.getHexStringFromByteArray(data, length));
+        if (logging)
+            Application.getInstance().getLogger().info("Received from connection [" + connection + "]: " + StringUtils.getHexStringFromByteArray(data, length));
         for (ConnectionListener listener : listeners.getListeners(ConnectionListener.class))
         {
             try
@@ -203,6 +206,8 @@ public class ConnectionManager implements ConnectionListener
     @Override
     public void onConnectionDataSent (Connection connection, byte[] data, int length)
     {
+        if (logging)
+            Application.getInstance().getLogger().info("Sent to connection [" + connection + "]: " + StringUtils.getHexStringFromByteArray(data, length));
         for (ConnectionListener listener : listeners.getListeners(ConnectionListener.class))
         {
             try
@@ -213,7 +218,6 @@ public class ConnectionManager implements ConnectionListener
             {
                 Application.getInstance().getLogger().warning("Error processing sent package: " + StringUtils.getHexStringFromByteArray(data, length) + " Ex: " + exception.getMessage());
             }
-        }
-        Application.getInstance().getLogger().info("Sent to connection [" + connection + "]: " + StringUtils.getHexStringFromByteArray(data, length));
+        }        
     }
 }
