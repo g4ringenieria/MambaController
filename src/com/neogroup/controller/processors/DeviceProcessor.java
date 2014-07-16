@@ -3,34 +3,73 @@ package com.neogroup.controller.processors;
 import com.neogroup.controller.Application;
 import com.neogroup.controller.Connection;
 import com.neogroup.controller.Connection.ConnectionListener;
+import com.neogroup.controller.ConsoleManager.ConsoleListener;
+import java.io.PrintStream;
+import java.util.List;
 
-public abstract class DeviceProcessor extends Processor implements ConnectionListener
+public abstract class DeviceProcessor extends Processor implements ConsoleListener, ConnectionListener
 {
     protected static final int REPORTTYPE_POLL = 1;
     protected static final int REPORTTYPE_TIMEREPORT = 2;
     protected static final int REPORTTYPE_DISTANCEREPORT = 3;
     
-    private int modelType;
+    private String modelName;
     
-    public DeviceProcessor (int modelType)       
+    public DeviceProcessor (String modelName)
     {
-        this.modelType = modelType;
+        this.modelName = modelName;
     }
     
     @Override
     public void start() 
     {
-        if (Application.getInstance().getType() == modelType)
-            Application.getInstance().getConnectionManager().addConnectionListener(this);
+        Application.getInstance().getConsoleManager().addConsoleListener(this);
     }
 
     @Override
     public void stop() 
     {
-        if (Application.getInstance().getType() == modelType)
-            Application.getInstance().getConnectionManager().removeConnectionListener(this);
+        Application.getInstance().getConsoleManager().removeConsoleListener(this);
+        Application.getInstance().getConnectionManager().removeConnectionListener(this);
     }
-
+    
+    @Override
+    public void onCommandEntered(String command, List<String> commandArguments, PrintStream out)
+    {
+        if (command.equals("enable"))
+        {
+            if (commandArguments.size() == 0)
+            {
+                out.println ("USAGE: enable [MODELNAME]");
+            }
+            else
+            {
+                String modelName = commandArguments.get(0);
+                if (modelName.equals(this.modelName))
+                {
+                    Application.getInstance().getConnectionManager().addConnectionListener(this);
+                    out.println ("Device processor \"" + modelName + "\" successfully enabled !!");
+                }
+            }
+        }
+        else if (command.equals("disable"))
+        {
+            if (commandArguments.size() == 0)
+            {
+                out.println ("USAGE: disable [MODELNAME]");
+            }
+            else
+            {
+                String modelName = commandArguments.get(0);
+                if (modelName.equals(this.modelName))
+                {
+                    Application.getInstance().getConnectionManager().removeConnectionListener(this);
+                    out.println ("Device processor \"" + modelName + "\" successfully disabled !!");
+                }
+            }
+        }
+    }
+    
     @Override
     public void onConnectionStarted(Connection connection) throws Exception 
     {

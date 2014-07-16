@@ -14,7 +14,6 @@ import java.util.logging.SimpleFormatter;
 public class Application 
 {
     private static final Application instance = new Application ();
-    private int type;
     private ConnectionManager connection; 
     private ConsoleManager console;
     private Logger logger;
@@ -29,15 +28,13 @@ public class Application
     {
         try
         {
-            int type = Integer.parseInt(args[0]);
-            int port = Integer.parseInt(args[1]);
-            getInstance().setType(type);
+            int port = Integer.parseInt(args[0]);
             getInstance().getConnectionManager().setPort(port);
             getInstance().start();   
         }
         catch (Exception ex)
         {
-            System.out.println ("Usage: java -jar NeoGroupController.jar [TYPE] [PORT]");
+            System.out.println ("Usage: java -jar NeoGroupController.jar [PORT]");
         }
     }
     
@@ -104,6 +101,11 @@ public class Application
         return console;
     }
     
+    public List<Processor> getProcessors ()
+    {
+        return processors;
+    }
+    
     public Logger getLogger ()
     {   
         if (logger == null)
@@ -111,7 +113,7 @@ public class Application
             logger = Logger.getLogger(this.getClass().getName());
             try
             {   
-                FileHandler handler = new FileHandler("log_" + getType() + ".txt", 1024000, 1, true);
+                FileHandler handler = new FileHandler("log.txt", 1024000, 1, true);
                 handler.setFormatter(new SimpleFormatter());
                 logger.setUseParentHandlers(false);
                 logger.addHandler(handler);
@@ -119,15 +121,5 @@ public class Application
             catch (Exception e){e.printStackTrace();}
         }
         return logger;
-    }
-
-    public int getType () 
-    {
-        return type;
-    }
-
-    public void setType (int type) 
-    {
-        this.type = type;
     }
 }

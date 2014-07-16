@@ -12,7 +12,7 @@ public class TT8750DeviceProcessor extends DeviceProcessor
     
     public TT8750DeviceProcessor()
     {
-        super(1);
+        super("TT8750");
     }
     
     @Override
