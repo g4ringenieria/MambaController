@@ -1,41 +1,20 @@
 
 package com.neogroup.controller.processors;
 
-import com.neogroup.controller.Application;
 import com.neogroup.controller.Connection;
-import com.neogroup.controller.Connection.ConnectionListener;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-public class TT8750DeviceProcessor extends Processor implements ConnectionListener
+public class TT8750DeviceProcessor extends DeviceProcessor
 {
     private static final int DATAGRAMTYPE_DEFAULT = 8;
     private static final int DATAGRAMTYPE_SERIALPORT = 2;
     
-    @Override
-    public void start() 
+    public TT8750DeviceProcessor()
     {
-        if (Application.getInstance().getType() == 1)
-            Application.getInstance().getConnectionManager().addConnectionListener(this);
+        super(1);
     }
-
-    @Override
-    public void stop() 
-    {
-        if (Application.getInstance().getType() == 1)
-            Application.getInstance().getConnectionManager().removeConnectionListener(this);
-    }
-
-    @Override
-    public void onConnectionStarted(Connection connection) throws Exception
-    {    
-    }
-
-    @Override
-    public void onConnectionEnded(Connection connection) throws Exception
-    {
-    }
-
+    
     @Override
     public void onConnectionDataReceived(Connection connection, byte[] data, int length) throws Exception
     {
@@ -107,11 +86,6 @@ public class TT8750DeviceProcessor extends Processor implements ConnectionListen
         }
     }
 
-    @Override
-    public void onConnectionDataSent(Connection client, byte[] data, int length) throws Exception
-    {
-    }
-    
     private int ord (byte b)
     {
         return (int)b & 0xFF;
@@ -144,7 +118,7 @@ public class TT8750DeviceProcessor extends Processor implements ConnectionListen
         int reportType = 0;
         switch (eventId)
         {
-            case 21: reportType = 2; break;
+            case 21: reportType = REPORTTYPE_TIMEREPORT; break;
         }
         return reportType;
     }
