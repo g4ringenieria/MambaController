@@ -1,7 +1,6 @@
 
 package com.neogroup.controller.processors;
 
-import com.neogroup.controller.Application;
 import com.neogroup.controller.Connection;
 import com.neogroup.controller.ConsoleManager;
 import com.neogroup.utils.StringUtils;
@@ -13,15 +12,15 @@ public class ConnectionsProcessor extends Processor implements ConsoleManager.Co
     @Override
     public void onStarted()
     {
-        Application.getInstance().getConsoleManager().addConsoleListener(this);
-        Application.getInstance().getConnectionManager().addConnectionListener(this);
+        getConsoleManager().addConsoleListener(this);
+        getConnectionManager().addConnectionListener(this);
     }
 
     @Override
     public void onStopped()
     {
-        Application.getInstance().getConsoleManager().removeConsoleListener(this);
-        Application.getInstance().getConnectionManager().removeConnectionListener(this);
+        getConsoleManager().removeConsoleListener(this);
+        getConnectionManager().removeConnectionListener(this);
     }
 
     @Override
@@ -29,17 +28,17 @@ public class ConnectionsProcessor extends Processor implements ConsoleManager.Co
     {
         if (command.equals("enableDebug"))
         {
-            Application.getInstance().getConnectionManager().setLogging(true);
+            getConnectionManager().setLogging(true);
             out.println("Logging enabled !!");
         }
         else if (command.equals("disableDebug"))
         {
-            Application.getInstance().getConnectionManager().setLogging(false);
+            getConnectionManager().setLogging(false);
             out.println("Logging disabled !!");
         }
         else if (command.equals("listConnections") || command.equals("lc"))
         {
-            List<Connection> connections = Application.getInstance().getConnectionManager().getConnections();
+            List<Connection> connections = getConnectionManager().getConnections();
             synchronized (connections)
             {
                 out.println("Connections size: " + connections.size());
@@ -65,12 +64,12 @@ public class ConnectionsProcessor extends Processor implements ConsoleManager.Co
                     if (connectionIdentifierIndex > 0)
                     {
                         int connectionIdentifier = Integer.parseInt(commandArguments.get(connectionIdentifierIndex));    
-                        Application.getInstance().getConnectionManager().sendToConnectionIdentifier(connectionIdentifier, data);
+                        getConnectionManager().sendToConnectionIdentifier(connectionIdentifier, data);
                     }
                     else 
                     {
                         int connectionId = Integer.parseInt(commandArguments.get(connectionIdIndex));
-                        Application.getInstance().getConnectionManager().sendToConnection(connectionId, data);
+                        getConnectionManager().sendToConnection(connectionId, data);
                     }
                     out.println ("Message sent succesfully !!");
                 }
@@ -95,12 +94,12 @@ public class ConnectionsProcessor extends Processor implements ConsoleManager.Co
                     if (connectionIdentifierIndex > 0)
                     {
                         int connectionIdentifier = Integer.parseInt(commandArguments.get(connectionIdentifierIndex));
-                        Application.getInstance().getConnectionManager().closeConnectionIdentifier(connectionIdentifier);
+                        getConnectionManager().closeConnectionIdentifier(connectionIdentifier);
                     }
                     else
                     {
                         int connectionId = Integer.parseInt(commandArguments.get(connectionIdIndex));
-                        Application.getInstance().getConnectionManager().closeConnection(connectionId);
+                        getConnectionManager().closeConnection(connectionId);
                     }
                     out.println ("Connection closed succesfully !!");
                 }
@@ -117,7 +116,7 @@ public class ConnectionsProcessor extends Processor implements ConsoleManager.Co
     {
         if (connection.isLocal())
         {
-            Application.getInstance().getConsoleManager().processCommand(new String(data), new PrintStream(connection.getOutput()));
+            getConsoleManager().processCommand(new String(data), new PrintStream(connection.getOutput()));
         }
     }
 

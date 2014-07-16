@@ -2,6 +2,9 @@
 package com.neogroup.controller.processors;
 
 import com.neogroup.controller.Application;
+import com.neogroup.controller.ConnectionManager;
+import com.neogroup.controller.ConsoleManager;
+import java.util.logging.Logger;
 
 public abstract class Processor
 {
@@ -12,6 +15,26 @@ public abstract class Processor
         this.running = false;
     }
 
+    protected Application getApplication ()
+    {
+        return Application.getInstance();
+    }
+    
+    protected Logger getLogger()
+    {
+        return getApplication().getLogger();
+    }
+    
+    protected ConnectionManager getConnectionManager()
+    {
+        return getApplication().getConnectionManager();
+    }
+    
+    protected ConsoleManager getConsoleManager()
+    {
+        return getApplication().getConsoleManager();
+    }
+    
     public final void start ()
     {
         if (!running)

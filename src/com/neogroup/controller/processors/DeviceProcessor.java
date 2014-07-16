@@ -1,6 +1,5 @@
 package com.neogroup.controller.processors;
 
-import com.neogroup.controller.Application;
 import com.neogroup.controller.Connection;
 import com.neogroup.controller.Connection.ConnectionListener;
 
@@ -13,13 +12,13 @@ public abstract class DeviceProcessor extends Processor implements ConnectionLis
     @Override
     public void onStarted() 
     {
-        Application.getInstance().getConnectionManager().addConnectionListener(this);
+        getConnectionManager().addConnectionListener(this);
     }
 
     @Override
     public void onStopped() 
     {
-        Application.getInstance().getConnectionManager().removeConnectionListener(this);
+        getConnectionManager().removeConnectionListener(this);
     }
         
     @Override
