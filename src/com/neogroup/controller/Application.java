@@ -1,6 +1,7 @@
 
 package com.neogroup.controller;
 
+import com.neogroup.controller.processors.CommandsProcessor;
 import com.neogroup.controller.processors.ConnectionsProcessor;
 import com.neogroup.controller.processors.GeneralProcessor;
 import com.neogroup.controller.processors.Processor;
@@ -41,6 +42,7 @@ public class Application
             getInstance().getConnectionManager().setPort(port);
             getInstance().addProcessor(new GeneralProcessor());
             getInstance().addProcessor(new ConnectionsProcessor());
+            getInstance().addProcessor(new CommandsProcessor()));
             getInstance().addProcessor((Processor)Class.forName("com.neogroup.controller.processors." + modelType + "DeviceProcessor").newInstance());
             getInstance().start();  
         }
