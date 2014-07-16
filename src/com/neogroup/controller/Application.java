@@ -2,8 +2,6 @@
 package com.neogroup.controller;
 
 import com.neogroup.controller.processors.ConnectionsProcessor;
-import com.neogroup.controller.processors.DeviceProcessor;
-import com.neogroup.controller.processors.TT8750DeviceProcessor;
 import com.neogroup.controller.processors.GeneralProcessor;
 import com.neogroup.controller.processors.Processor;
 import java.util.ArrayList;
@@ -15,8 +13,8 @@ import java.util.logging.SimpleFormatter;
 public class Application 
 {
     private static final Application instance = new Application ();
-    private ConnectionManager connection; 
-    private ConsoleManager console;
+    private ConnectionManager connectionManager; 
+    private ConsoleManager consoleManager;
     private Logger logger;
     private List<Processor> processors;
     
@@ -31,30 +29,24 @@ public class Application
         {
             int port = Integer.parseInt(args[0]);   
             String modelType = args[1];
+            modelType = Character.toString(modelType.charAt(0)).toUpperCase() + modelType.substring(1);
             getInstance().getConnectionManager().setPort(port);
             getInstance().addProcessor(new GeneralProcessor());
             getInstance().addProcessor(new ConnectionsProcessor());
-            switch (modelType)
-            {
-                case "TT8750":
-                    getInstance().addProcessor(new TT8750DeviceProcessor());
-                    break;
-                default:
-                    throw new Exception ("ModelType \"" + modelType + "\" not found !!");
-            }
+            getInstance().addProcessor((Processor)Class.forName("com.neogroup.controller.processors." + modelType + "DeviceProcessor").newInstance());
             getInstance().start();  
         }
         catch (Exception ex)
         {
-            System.out.println ("Error: " + ex.getMessage() + "\nUSAGE: java -jar NeoGroupController.jar PORT MODELTYPE");
+            System.out.println ("Error: " + ex.toString() + "\nUSAGE: java -jar NeoGroupController.jar PORT MODELTYPE");
             System.exit(1);
         }
     }
     
     private Application ()
     {
-        connection = new ConnectionManager();
-        console = new ConsoleManager();
+        connectionManager = new ConnectionManager();
+        consoleManager = new ConsoleManager();
         processors = new ArrayList<Processor>();
     }
     
@@ -68,15 +60,15 @@ public class Application
             processors.clear();
             processors = null;
         }
-        if (console != null)
+        if (consoleManager != null)
         {
-            try { console.stop(); } catch (Exception ex) {}
-            console = null;
+            try { consoleManager.stop(); } catch (Exception ex) {}
+            consoleManager = null;
         }
-        if (connection != null)
+        if (connectionManager != null)
         {
-            try { connection.stop(); } catch (Exception ex) {}
-            connection = null;
+            try { connectionManager.stop(); } catch (Exception ex) {}
+            connectionManager = null;
         }
         System.exit(0);
     }
@@ -86,16 +78,16 @@ public class Application
         getLogger().info("Initializing Controller ...");
         for (Processor processor : processors)
             processor.start();
-        console.start();
-        connection.start();
+        consoleManager.start();
+        connectionManager.start();
         getLogger().info("Controller initialized !!");
     }
     
     public void stop ()
     {
         getLogger().info("Finalizing Controller ...");
-        console.stop();
-        connection.stop();
+        consoleManager.stop();
+        connectionManager.stop();
         for (Processor processor : processors)
             processor.stop();
         getLogger().info("Controller finalized !!");
@@ -103,12 +95,12 @@ public class Application
     
     public ConnectionManager getConnectionManager ()
     {
-        return connection;
+        return connectionManager;
     }
     
     public ConsoleManager getConsoleManager ()
     {
-        return console;
+        return consoleManager;
     }
     
     public void addProcessor (Processor processor)
