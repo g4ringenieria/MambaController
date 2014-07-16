@@ -16,12 +16,14 @@ public class Connection extends Thread
     private final String socketAddress;
     private DataOutputStream output;
     private DataInputStream input;
-
+    private boolean local;
+    
     public Connection (Socket socket)
     {
         this.identifier = -1;
         this.socket = socket;
         this.socketAddress = socket.getInetAddress().getHostAddress();
+        this.local = (socketAddress.equals("127.0.0.1") || socketAddress.equals("localhost"));
     }
     
     @Override
@@ -90,6 +92,16 @@ public class Connection extends Thread
             try { socket.close(); } catch (Exception ex) {}
             socket = null;
         }
+    }
+
+    public boolean isLocal() 
+    {
+        return local;
+    }
+
+    public void setLocal(boolean local) 
+    {
+        this.local = local;
     }
     
     public void sendData (byte[] dataToSend) throws Exception
