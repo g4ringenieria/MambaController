@@ -20,6 +20,7 @@ public class Application
     private static final Application instance = new Application ();
     private ConnectionManager connectionManager; 
     private ConsoleManager consoleManager;
+    private CommandManager commandManager;
     private Logger logger;
     private String name;
     private List<Processor> processors;
@@ -52,6 +53,7 @@ public class Application
     
     private Application ()
     {
+        commandManager = new CommandManager();
         connectionManager = new ConnectionManager();
         consoleManager = new ConsoleManager();
         processors = new ArrayList<Processor>();
@@ -118,6 +120,11 @@ public class Application
     public ConsoleManager getConsoleManager ()
     {
         return consoleManager;
+    }
+
+    public CommandManager getCommandManager() 
+    {
+        return commandManager;
     }
     
     public void addProcessor (Processor processor)

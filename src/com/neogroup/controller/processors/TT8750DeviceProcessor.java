@@ -66,8 +66,7 @@ public class TT8750DeviceProcessor extends DeviceProcessor
                     reportJson.append(",\"odometer\": ").append(odometer);
                     reportJson.append(",\"date\": ").append(dateTime);
                     reportJson.append('}');
-                    
-                    Runtime.getRuntime().exec(new String[] {"php", "../../NeoGroup/command.php", "reports/createResource", reportJson.toString()});
+                    getCommandManager().executeAction("reports/createResource", reportJson.toString());
                 }
                 break;
             case DATAGRAMTYPE_SERIALPORT:
