@@ -75,7 +75,7 @@ public class ConnectionManager implements ConnectionListener
                             while (active)
                             {
                                 Socket connectionSocket = serverSocket.accept();
-                                Connection connection = new Connection(ConnectionManager.this, connectionSocket);
+                                Connection connection = new Connection(connectionSocket);
                                 connection.addConnectionListener(ConnectionManager.this);
                                 connection.start();
                             }

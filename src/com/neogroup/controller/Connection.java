@@ -10,20 +10,18 @@ import javax.swing.event.EventListenerList;
 
 public class Connection extends Thread
 {
-    protected EventListenerList listeners = new EventListenerList();
+    private EventListenerList listeners = new EventListenerList();
     private int identifier;
-    private String socketAddress;
     private Socket socket;
-    private ConnectionManager connectionManager;
+    private final String socketAddress;
     private DataOutputStream output;
     private DataInputStream input;
 
-    public Connection (ConnectionManager connectionManager, Socket socket)
+    public Connection (Socket socket)
     {
         this.identifier = -1;
         this.socket = socket;
         this.socketAddress = socket.getInetAddress().getHostAddress();
-        this.connectionManager = connectionManager;
     }
     
     @Override
@@ -127,8 +125,9 @@ public class Connection extends Thread
         this.identifier = identifier;
     }
 
-    public ConnectionManager getConnectionManager() {
-        return connectionManager;
+    public ConnectionManager getConnectionManager() 
+    {
+        return Application.getInstance().getConnectionManager();
     }
     
     public void addConnectionListener(ConnectionListener listener)
