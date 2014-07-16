@@ -29,10 +29,20 @@ public class Application
     {
         try
         {
-            int port = Integer.parseInt(args[0]);
+            int port = Integer.parseInt(args[0]);   
+            String modelType = args[1];
             getInstance().getConnectionManager().setPort(port);
+            getInstance().addProcessor(new GeneralProcessor());
+            getInstance().addProcessor(new ConnectionsProcessor());
+            switch (modelType)
+            {
+                case "TT8750":
+                    getInstance().addProcessor(new TT8750DeviceProcessor());
+                    break;
+                default:
+                    throw new Exception ("ModelType \"" + modelType + "\" not found !!");
+            }
             getInstance().start();  
-            DeviceProcessor.setModelType(args[1]);
         }
         catch (Exception ex)
         {
@@ -46,9 +56,6 @@ public class Application
         connection = new ConnectionManager();
         console = new ConsoleManager();
         processors = new ArrayList<Processor>();
-        processors.add(new GeneralProcessor());
-        processors.add(new ConnectionsProcessor());
-        processors.add(new TT8750DeviceProcessor());
     }
     
     public void destroy ()
@@ -78,8 +85,7 @@ public class Application
     {
         getLogger().info("Initializing Controller ...");
         for (Processor processor : processors)
-            if (processor.isAutoStart())
-                processor.start();
+            processor.start();
         console.start();
         connection.start();
         getLogger().info("Controller initialized !!");
@@ -103,6 +109,11 @@ public class Application
     public ConsoleManager getConsoleManager ()
     {
         return console;
+    }
+    
+    public void addProcessor (Processor processor)
+    {
+        this.processors.add (processor);
     }
     
     public List<Processor> getProcessors ()

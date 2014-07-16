@@ -9,38 +9,7 @@ public abstract class DeviceProcessor extends Processor implements ConnectionLis
     protected static final int REPORTTYPE_POLL = 1;
     protected static final int REPORTTYPE_TIMEREPORT = 2;
     protected static final int REPORTTYPE_DISTANCEREPORT = 3;
-    
-    private String modelName;
-    
-    public static void setModelType (String modelName) throws Exception
-    {
-        boolean processorFound = false;
-        for (Processor processor : Application.getInstance().getProcessors())
-        {
-            if (processor instanceof DeviceProcessor)
-            {
-                DeviceProcessor deviceProcessor = (DeviceProcessor)processor;
-                if (deviceProcessor.getModelName().equals(modelName))
-                {
-                    deviceProcessor.start();
-                    processorFound = true;
-                }
-                else
-                {
-                    deviceProcessor.stop();
-                }
-            }
-        }
-        if (!processorFound)
-            throw new Exception ("Device processor \"" + modelName + "\" not found !!");
-    }
-    
-    public DeviceProcessor (String modelName)
-    {
-        super(false);
-        this.modelName = modelName;
-    }
-    
+       
     @Override
     public void onStarted() 
     {
@@ -52,12 +21,7 @@ public abstract class DeviceProcessor extends Processor implements ConnectionLis
     {
         Application.getInstance().getConnectionManager().removeConnectionListener(this);
     }
-    
-    public String getModelName() 
-    {
-        return modelName;
-    }
-    
+        
     @Override
     public void onConnectionStarted(Connection connection) throws Exception 
     {

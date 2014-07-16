@@ -6,29 +6,12 @@ import com.neogroup.controller.Application;
 public abstract class Processor
 {
     private boolean running;
-    private boolean autoStart;
     
     public Processor ()
     {
-        this (true);
-    }
-    
-    public Processor (boolean autoStart)
-    {
         this.running = false;
-        this.autoStart = autoStart;
     }
 
-    public boolean isAutoStart() 
-    {
-        return autoStart;
-    }
-
-    public void setAutoStart(boolean autoStart) 
-    {
-        this.autoStart = autoStart;
-    }
-    
     public final void start ()
     {
         if (!running)

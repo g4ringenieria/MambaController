@@ -10,11 +10,6 @@ public class TT8750DeviceProcessor extends DeviceProcessor
     private static final int DATAGRAMTYPE_DEFAULT = 8;
     private static final int DATAGRAMTYPE_SERIALPORT = 2;
     
-    public TT8750DeviceProcessor()
-    {
-        super("TT8750");
-    }
-    
     @Override
     public void datagramReceived(Connection connection, byte[] data, int length) throws Exception
     {
