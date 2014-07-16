@@ -137,6 +137,16 @@ public class Connection extends Thread
         this.identifier = identifier;
     }
 
+    public DataOutputStream getOutput() 
+    {
+        return output;
+    }
+
+    public DataInputStream getInput() 
+    {
+        return input;
+    }
+
     public ConnectionManager getConnectionManager() 
     {
         return Application.getInstance().getConnectionManager();

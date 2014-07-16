@@ -16,7 +16,7 @@ public class TT8750DeviceProcessor extends DeviceProcessor
     }
     
     @Override
-    public void onConnectionDataReceived(Connection connection, byte[] data, int length) throws Exception
+    public void datagramReceived(Connection connection, byte[] data, int length) throws Exception
     {
         int datagramType = ord(data[4]);
        

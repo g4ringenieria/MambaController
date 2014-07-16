@@ -2,6 +2,7 @@
 package com.neogroup.controller;
 
 import com.neogroup.utils.ConsoleUtils;
+import java.io.PrintStream;
 import java.util.EventListener;
 import java.util.List;
 import javax.swing.event.EventListenerList;
@@ -46,9 +47,14 @@ public class ConsoleManager
     
     public void processCommand (String command)
     {
+        processCommand (command, System.out);
+    }
+    
+    public void processCommand (String command, PrintStream out)
+    {
         List<String> commandTokens = ConsoleUtils.parseCommand(command);
         if (commandTokens.size() > 0)
-            fireConsoleEvent (commandTokens.get(0), commandTokens.subList(1, commandTokens.size()));
+            fireConsoleEvent (commandTokens.get(0), commandTokens.subList(1, commandTokens.size()), out);
     }
     
     public void addConsoleListener(ConsoleListener listener)
@@ -61,14 +67,14 @@ public class ConsoleManager
         listeners.remove(ConsoleListener.class, listener);
     }
 
-    public void fireConsoleEvent (String command, List<String> commandTokens)
+    public void fireConsoleEvent (String command, List<String> commandTokens, PrintStream out)
     {
         for (ConsoleListener listener : listeners.getListeners(ConsoleListener.class))
-            listener.onCommandEntered(command, commandTokens);
+            listener.onCommandEntered(command, commandTokens, out);
     }
     
     public interface ConsoleListener extends EventListener
     {
-        public void onCommandEntered (String command, List<String> commandArguments);
+        public void onCommandEntered (String command, List<String> commandArguments, PrintStream out);
     }
 }

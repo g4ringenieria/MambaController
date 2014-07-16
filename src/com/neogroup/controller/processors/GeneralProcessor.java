@@ -3,6 +3,7 @@ package com.neogroup.controller.processors;
 
 import com.neogroup.controller.Application;
 import com.neogroup.controller.ConsoleManager;
+import java.io.PrintStream;
 import java.util.List;
 
 public class GeneralProcessor extends Processor implements ConsoleManager.ConsoleListener
@@ -20,7 +21,7 @@ public class GeneralProcessor extends Processor implements ConsoleManager.Consol
     }
 
     @Override
-    public void onCommandEntered(String command, List<String> commandArguments)
+    public void onCommandEntered(String command, List<String> commandArguments, PrintStream out)
     {
         if (command.equals("exit"))
         {

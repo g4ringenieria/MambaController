@@ -44,10 +44,16 @@ public abstract class DeviceProcessor extends Processor implements ConnectionLis
     @Override
     public void onConnectionDataReceived(Connection connection, byte[] data, int length) throws Exception 
     {
+        if (!connection.isLocal())
+        {
+            datagramReceived(connection, data, length);
+        }
     }
 
     @Override
     public void onConnectionDataSent(Connection connection, byte[] data, int length) throws Exception 
     {
     }
+    
+    protected abstract void datagramReceived (Connection connection, byte[] data, int length) throws Exception;
 }
