@@ -29,8 +29,23 @@ public abstract class DeviceProcessor extends Processor implements ConsoleListen
     @Override
     public void stop() 
     {
+        disable();
         Application.getInstance().getConsoleManager().removeConsoleListener(this);
+    }
+    
+    public void enable ()
+    {
+        Application.getInstance().getConnectionManager().addConnectionListener(this);
+    }
+    
+    public void disable ()
+    {
         Application.getInstance().getConnectionManager().removeConnectionListener(this);
+    }
+
+    public String getModelName() 
+    {
+        return modelName;
     }
     
     @Override
@@ -47,7 +62,7 @@ public abstract class DeviceProcessor extends Processor implements ConsoleListen
                 String modelName = commandArguments.get(0);
                 if (modelName.equals(this.modelName))
                 {
-                    Application.getInstance().getConnectionManager().addConnectionListener(this);
+                    enable ();
                     out.println ("Device processor \"" + modelName + "\" successfully enabled !!");
                 }
             }
@@ -63,7 +78,7 @@ public abstract class DeviceProcessor extends Processor implements ConsoleListen
                 String modelName = commandArguments.get(0);
                 if (modelName.equals(this.modelName))
                 {
-                    Application.getInstance().getConnectionManager().removeConnectionListener(this);
+                    disable ();
                     out.println ("Device processor \"" + modelName + "\" successfully disabled !!");
                 }
             }

@@ -2,6 +2,7 @@
 package com.neogroup.controller;
 
 import com.neogroup.controller.processors.ConnectionsProcessor;
+import com.neogroup.controller.processors.DeviceProcessor;
 import com.neogroup.controller.processors.TT8750DeviceProcessor;
 import com.neogroup.controller.processors.GeneralProcessor;
 import com.neogroup.controller.processors.Processor;
@@ -30,11 +31,14 @@ public class Application
         {
             int port = Integer.parseInt(args[0]);
             getInstance().getConnectionManager().setPort(port);
-            getInstance().start();   
+            getInstance().start();  
+            if (args.length > 1)
+                getInstance().setDeviceModel(args[1]);
         }
         catch (Exception ex)
         {
-            System.out.println ("Usage: java -jar NeoGroupController.jar [PORT]");
+            System.out.println ("Error: " + ex.getMessage() + "\nUSAGE: java -jar NeoGroupController.jar PORT [MODELTYPE]");
+            System.exit(1);
         }
     }
     
@@ -89,6 +93,29 @@ public class Application
         for (Processor processor : processors)
             processor.stop();
         getLogger().info("Controller finalized !!");
+    }
+    
+    public void setDeviceModel (String modelName) throws Exception
+    {
+        boolean processorFound = false;
+        for (Processor processor : processors)
+        {
+            if (processor instanceof DeviceProcessor)
+            {
+                DeviceProcessor deviceProcessor = (DeviceProcessor)processor;
+                if (deviceProcessor.getModelName().equals(modelName))
+                {
+                    deviceProcessor.enable();
+                    processorFound = true;
+                }
+                else
+                {
+                    deviceProcessor.disable();
+                }
+            }
+        }
+        if (!processorFound)
+            throw new Exception ("Device processor \"" + modelName + "\" not found !!");
     }
     
     public ConnectionManager getConnectionManager ()
