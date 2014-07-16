@@ -16,6 +16,7 @@ public class Application
     private ConnectionManager connectionManager; 
     private ConsoleManager consoleManager;
     private Logger logger;
+    private String name;
     private List<Processor> processors;
     
     public static Application getInstance ()
@@ -30,6 +31,7 @@ public class Application
             int port = Integer.parseInt(args[0]);   
             String modelType = args[1];
             modelType = Character.toString(modelType.charAt(0)).toUpperCase() + modelType.substring(1);
+            getInstance().setName(modelType);
             getInstance().getConnectionManager().setPort(port);
             getInstance().addProcessor(new GeneralProcessor());
             getInstance().addProcessor(new ConnectionsProcessor());
@@ -49,7 +51,7 @@ public class Application
         consoleManager = new ConsoleManager();
         processors = new ArrayList<Processor>();
     }
-    
+
     public void destroy ()
     {
         stop();
@@ -93,6 +95,16 @@ public class Application
         getLogger().info("Controller finalized !!");
     }
     
+    public String getName() 
+    {
+        return name;
+    }
+
+    public void setName(String name) 
+    {
+        this.name = name;
+    }
+    
     public ConnectionManager getConnectionManager ()
     {
         return connectionManager;
@@ -120,7 +132,7 @@ public class Application
             logger = Logger.getLogger(this.getClass().getName());
             try
             {   
-                FileHandler handler = new FileHandler("log.txt", 1024000, 1, true);
+                FileHandler handler = new FileHandler("log_" + getName() + ".txt", 1024000, 1, true);
                 handler.setFormatter(new SimpleFormatter());
                 logger.setUseParentHandlers(false);
                 logger.addHandler(handler);
