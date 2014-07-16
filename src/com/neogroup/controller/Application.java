@@ -32,12 +32,11 @@ public class Application
             int port = Integer.parseInt(args[0]);
             getInstance().getConnectionManager().setPort(port);
             getInstance().start();  
-            if (args.length > 1)
-                getInstance().setDeviceModel(args[1]);
+            DeviceProcessor.setModelType(args[1]);
         }
         catch (Exception ex)
         {
-            System.out.println ("Error: " + ex.getMessage() + "\nUSAGE: java -jar NeoGroupController.jar PORT [MODELTYPE]");
+            System.out.println ("Error: " + ex.getMessage() + "\nUSAGE: java -jar NeoGroupController.jar PORT MODELTYPE");
             System.exit(1);
         }
     }
@@ -93,29 +92,6 @@ public class Application
         for (Processor processor : processors)
             processor.stop();
         getLogger().info("Controller finalized !!");
-    }
-    
-    public void setDeviceModel (String modelName) throws Exception
-    {
-        boolean processorFound = false;
-        for (Processor processor : processors)
-        {
-            if (processor instanceof DeviceProcessor)
-            {
-                DeviceProcessor deviceProcessor = (DeviceProcessor)processor;
-                if (deviceProcessor.getModelName().equals(modelName))
-                {
-                    deviceProcessor.enable();
-                    processorFound = true;
-                }
-                else
-                {
-                    deviceProcessor.disable();
-                }
-            }
-        }
-        if (!processorFound)
-            throw new Exception ("Device processor \"" + modelName + "\" not found !!");
     }
     
     public ConnectionManager getConnectionManager ()

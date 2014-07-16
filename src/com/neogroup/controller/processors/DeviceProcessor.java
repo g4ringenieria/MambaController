@@ -3,17 +3,37 @@ package com.neogroup.controller.processors;
 import com.neogroup.controller.Application;
 import com.neogroup.controller.Connection;
 import com.neogroup.controller.Connection.ConnectionListener;
-import com.neogroup.controller.ConsoleManager.ConsoleListener;
-import java.io.PrintStream;
-import java.util.List;
 
-public abstract class DeviceProcessor extends Processor implements ConsoleListener, ConnectionListener
+public abstract class DeviceProcessor extends Processor implements ConnectionListener
 {
     protected static final int REPORTTYPE_POLL = 1;
     protected static final int REPORTTYPE_TIMEREPORT = 2;
     protected static final int REPORTTYPE_DISTANCEREPORT = 3;
     
     private String modelName;
+    
+    public static void setModelType (String modelName) throws Exception
+    {
+        boolean processorFound = false;
+        for (Processor processor : Application.getInstance().getProcessors())
+        {
+            if (processor instanceof DeviceProcessor)
+            {
+                DeviceProcessor deviceProcessor = (DeviceProcessor)processor;
+                if (deviceProcessor.getModelName().equals(modelName))
+                {
+                    deviceProcessor.start();
+                    processorFound = true;
+                }
+                else
+                {
+                    deviceProcessor.stop();
+                }
+            }
+        }
+        if (!processorFound)
+            throw new Exception ("Device processor \"" + modelName + "\" not found !!");
+    }
     
     public DeviceProcessor (String modelName)
     {
@@ -23,66 +43,18 @@ public abstract class DeviceProcessor extends Processor implements ConsoleListen
     @Override
     public void start() 
     {
-        Application.getInstance().getConsoleManager().addConsoleListener(this);
+        Application.getInstance().getConnectionManager().addConnectionListener(this);
     }
 
     @Override
     public void stop() 
     {
-        disable();
-        Application.getInstance().getConsoleManager().removeConsoleListener(this);
-    }
-    
-    public void enable ()
-    {
-        Application.getInstance().getConnectionManager().addConnectionListener(this);
-    }
-    
-    public void disable ()
-    {
         Application.getInstance().getConnectionManager().removeConnectionListener(this);
     }
-
+    
     public String getModelName() 
     {
         return modelName;
-    }
-    
-    @Override
-    public void onCommandEntered(String command, List<String> commandArguments, PrintStream out)
-    {
-        if (command.equals("enable"))
-        {
-            if (commandArguments.size() == 0)
-            {
-                out.println ("USAGE: enable [MODELNAME]");
-            }
-            else
-            {
-                String modelName = commandArguments.get(0);
-                if (modelName.equals(this.modelName))
-                {
-                    enable ();
-                    out.println ("Device processor \"" + modelName + "\" successfully enabled !!");
-                }
-            }
-        }
-        else if (command.equals("disable"))
-        {
-            if (commandArguments.size() == 0)
-            {
-                out.println ("USAGE: disable [MODELNAME]");
-            }
-            else
-            {
-                String modelName = commandArguments.get(0);
-                if (modelName.equals(this.modelName))
-                {
-                    disable ();
-                    out.println ("Device processor \"" + modelName + "\" successfully disabled !!");
-                }
-            }
-        }
     }
     
     @Override
