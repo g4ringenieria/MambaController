@@ -11,14 +11,14 @@ import java.util.List;
 public class ConnectionsProcessor extends Processor implements ConsoleManager.ConsoleListener, Connection.ConnectionListener
 {
     @Override
-    public void start()
+    public void onStarted()
     {
         Application.getInstance().getConsoleManager().addConsoleListener(this);
         Application.getInstance().getConnectionManager().addConnectionListener(this);
     }
 
     @Override
-    public void stop()
+    public void onStopped()
     {
         Application.getInstance().getConsoleManager().removeConsoleListener(this);
         Application.getInstance().getConnectionManager().removeConnectionListener(this);

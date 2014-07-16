@@ -78,7 +78,8 @@ public class Application
     {
         getLogger().info("Initializing Controller ...");
         for (Processor processor : processors)
-            processor.start();
+            if (processor.isAutoStart())
+                processor.start();
         console.start();
         connection.start();
         getLogger().info("Controller initialized !!");

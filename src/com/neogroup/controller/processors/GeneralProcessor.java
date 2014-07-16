@@ -9,13 +9,13 @@ import java.util.List;
 public class GeneralProcessor extends Processor implements ConsoleManager.ConsoleListener
 {
     @Override
-    public void start()
+    public void onStarted()
     {
         Application.getInstance().getConsoleManager().addConsoleListener(this);
     }
 
     @Override
-    public void stop()
+    public void onStopped()
     {
         Application.getInstance().getConsoleManager().removeConsoleListener(this);
     }

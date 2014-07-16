@@ -37,17 +37,18 @@ public abstract class DeviceProcessor extends Processor implements ConnectionLis
     
     public DeviceProcessor (String modelName)
     {
+        super(false);
         this.modelName = modelName;
     }
     
     @Override
-    public void start() 
+    public void onStarted() 
     {
         Application.getInstance().getConnectionManager().addConnectionListener(this);
     }
 
     @Override
-    public void stop() 
+    public void onStopped() 
     {
         Application.getInstance().getConnectionManager().removeConnectionListener(this);
     }
