@@ -109,6 +109,12 @@ public class ConnectionsProcessor extends Processor implements ConsoleManager.Co
                 }
             }
         }
+        else if (command.equals("status")) 
+        {
+            out.println ("Connections debug mode: " + (getConnectionManager().isLogging()?"true":"false"));
+            out.println ("Connections port: " + getConnectionManager().getPort());
+            out.println ("Connections: " + getConnectionManager().getConnections().size());
+        }
     }
 
     @Override

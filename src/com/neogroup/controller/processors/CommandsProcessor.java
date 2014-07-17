@@ -42,5 +42,11 @@ public class CommandsProcessor extends Processor implements ConsoleManager.Conso
             getCommandManager().setScriptName(commandArguments.get(0));
             out.println ("Commands script name modified successfully !!");;
         } 
+        else if (command.equals("status")) 
+        {
+            out.println ("Scripts debug mode: " + (getCommandManager().isDebugMode()?"true":"false"));
+            out.println ("Scripts local dir: " + getCommandManager().getLocalScriptsDir());
+            out.println ("Scripts filename: " + getCommandManager().getScriptName());
+        }
     }
 }
