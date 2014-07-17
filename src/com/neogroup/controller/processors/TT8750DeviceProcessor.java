@@ -101,6 +101,12 @@ public class TT8750DeviceProcessor extends DeviceProcessor
             d = 255 - d;
         }
         String decimalCoordinate = String.valueOf(d + (c << 8) + (b << 16) + (a << 24));
+        if (decimalCoordinate.length() < 8)
+        {
+            int paddingCount = 8 - decimalCoordinate.length();
+            for (int i = 0; i < paddingCount; i++)
+                decimalCoordinate = "0" + decimalCoordinate;
+        }
         float degrees = Float.parseFloat(decimalCoordinate.substring(0, decimalCoordinate.length() - 6));
         float minutes = Float.parseFloat(decimalCoordinate.substring(decimalCoordinate.length() - 6)) / 10000;
         float coordinateDegrees = degrees + (minutes/60);
