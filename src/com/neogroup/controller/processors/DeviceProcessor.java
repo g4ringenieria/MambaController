@@ -5,6 +5,7 @@ import com.neogroup.controller.Connection;
 import com.neogroup.controller.Connection.ConnectionListener;
 import com.neogroup.controller.ConsoleManager;
 import com.neogroup.utils.StringUtils;
+import com.neogroup.utils.StringUtils;
 import java.io.PrintStream;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class DeviceProcessor extends Processor implements ConnectionListener, Co
     {
         if (!connection.isLocal())
         {
-            String datagram = StringUtils.getHexStringFromByteArray(data, length);
+            String datagram = (connection.getIdentifier() >= 0? StringUtils.padLeft(Integer.toHexString(connection.getIdentifier()), 4, '0') : "0000") + StringUtils.getHexStringFromByteArray(data, length);
             String responseDatagram = getScriptsManager().executeAction("device/" + getApplication().getName() + "/notifyPackage", datagram);
             try
             {

@@ -24,4 +24,14 @@ public abstract class StringUtils
             data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4) + Character.digit(hexString.charAt(i+1), 16));
         return data;
     }
+    
+    public static String padLeft (String str, int count, char fill)
+    {
+        return String.format("%" + count + "s", str).replace(' ', fill);
+    }
+    
+    public static String padRight (String str, int count, char fill)
+    {
+        return String.format("%-" + count + "s", str).replace(' ', fill);
+    }
 }
