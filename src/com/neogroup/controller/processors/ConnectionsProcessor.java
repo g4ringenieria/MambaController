@@ -123,6 +123,7 @@ public class ConnectionsProcessor extends Processor implements ConsoleManager.Co
         if (connection.isLocal())
         {
             String command = new String(data, 0, length);
+            command = command.trim();
             PrintStream out = new PrintStream(connection.getOutput());
             if (command.equals("emulateDevice"))
             {
