@@ -1,21 +1,27 @@
+
 package com.neogroup.controller.processors;
 
 import com.neogroup.controller.Connection;
 import com.neogroup.controller.Connection.ConnectionListener;
+import com.neogroup.controller.ConsoleManager;
 import com.neogroup.utils.StringUtils;
+import java.io.PrintStream;
+import java.util.List;
 
-public class DeviceProcessor extends Processor implements ConnectionListener
+public class DeviceProcessor extends Processor implements ConnectionListener, ConsoleManager.ConsoleListener
 { 
     @Override
     public void onStarted() 
     {
         getConnectionManager().addConnectionListener(this);
+        getConsoleManager().addConsoleListener(this);
     }
 
     @Override
     public void onStopped() 
     {
         getConnectionManager().removeConnectionListener(this);
+        getConsoleManager().removeConsoleListener(this);
     }
         
     @Override
@@ -49,6 +55,30 @@ public class DeviceProcessor extends Processor implements ConnectionListener
     @Override
     public void onConnectionDataSent(Connection connection, byte[] data, int length) throws Exception 
     {
+    }
+    
+    @Override
+    public void onCommandEntered(String command, List<String> commandArguments, PrintStream out) 
+    {
+        if (command.equals("sendPackage") || command.equals("sp"))
+        {
+            if (commandArguments.size() == 0)
+            {
+                out.println ("USAGE: sendPackage [HEXAPACKAGE]");
+            }
+            else
+            {
+                try
+                {
+                    sendPackage (commandArguments.get(0));
+                    out.println ("Package sent succesfully !!");
+                }
+                catch (Exception ex)
+                {
+                    out.println ("Error sending the package: " + ex.getMessage());
+                }
+            }
+        }
     }
     
     public void sendPackage (String datagram) throws Exception

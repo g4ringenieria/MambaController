@@ -145,7 +145,7 @@ public class Application
             logger = Logger.getLogger(this.getClass().getName());
             try
             {   
-                FileHandler handler = new FileHandler("log.txt", 1024000, 1, true);
+                FileHandler handler = new FileHandler("./logs/" + getName() + ".txt", 1024000, 1, true);
                 handler.setFormatter(new Formatter() 
                 {       
                     private final Date date = new Date();
