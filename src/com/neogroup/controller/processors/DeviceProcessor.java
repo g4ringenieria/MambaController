@@ -41,13 +41,16 @@ public class DeviceProcessor extends Processor implements ConnectionListener, Co
         {
             String datagram = (connection.getIdentifier() >= 0? StringUtils.padLeft(Integer.toHexString(connection.getIdentifier()), 4, '0') : "0000") + StringUtils.getHexStringFromByteArray(data, length);
             String responseDatagram = getScriptsManager().executeAction("device/" + getApplication().getName() + "/notifyPackage", datagram);
-            try
+            if (!responseDatagram.isEmpty())
             {
-                sendPackage(responseDatagram, connection);
-            }
-            catch (Exception exception)
-            {
-                getLogger().warning("Datagram \"" + responseDatagram + "\" could not be sent !!. " + exception.getMessage());
+                try
+                {
+                    sendPackage(responseDatagram, connection);
+                }
+                catch (Exception exception)
+                {
+                    getLogger().warning("Datagram \"" + responseDatagram + "\" could not be sent !!. " + exception.getMessage());
+                }
             }
         }
     }
