@@ -122,7 +122,17 @@ public class ConnectionsProcessor extends Processor implements ConsoleManager.Co
     {
         if (connection.isLocal())
         {
-            getConsoleManager().processCommand(new String(data), new PrintStream(connection.getOutput()));
+            String command = new String(data);
+            PrintStream out = new PrintStream(connection.getOutput());
+            if (command.equals("emulateDevice"))
+            {
+                connection.setLocal(false);
+                out.println ("Device emulation activated !!");
+            }
+            else
+            {
+                getConsoleManager().processCommand(command, out);
+            }
         }
     }
 
