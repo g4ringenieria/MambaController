@@ -5,7 +5,6 @@ import com.neogroup.controller.Connection;
 import com.neogroup.controller.Connection.ConnectionListener;
 import com.neogroup.controller.ConsoleManager;
 import com.neogroup.utils.StringUtils;
-import com.neogroup.utils.StringUtils;
 import java.io.PrintStream;
 import java.util.List;
 
