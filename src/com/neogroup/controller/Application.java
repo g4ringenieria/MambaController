@@ -1,7 +1,7 @@
 
 package com.neogroup.controller;
 
-import com.neogroup.controller.processors.CommandsProcessor;
+import com.neogroup.controller.processors.ScriptsProcessor;
 import com.neogroup.controller.processors.ConnectionsProcessor;
 import com.neogroup.controller.processors.DeviceProcessor;
 import com.neogroup.controller.processors.GeneralProcessor;
@@ -22,7 +22,7 @@ public class Application
     private static final Application instance = new Application ();
     private ConnectionManager connectionManager; 
     private ConsoleManager consoleManager;
-    private CommandManager commandManager;
+    private ScriptsManager commandManager;
     private Logger logger;
     private String name;
     private List<Processor> processors;
@@ -41,7 +41,7 @@ public class Application
             getInstance().getConnectionManager().setPort(port);
             getInstance().addProcessor(new GeneralProcessor());
             getInstance().addProcessor(new ConnectionsProcessor());
-            getInstance().addProcessor(new CommandsProcessor());
+            getInstance().addProcessor(new ScriptsProcessor());
             getInstance().addProcessor(new DeviceProcessor());
             getInstance().start();  
         }
@@ -54,7 +54,7 @@ public class Application
     
     private Application ()
     {
-        commandManager = new CommandManager();
+        commandManager = new ScriptsManager();
         connectionManager = new ConnectionManager();
         consoleManager = new ConsoleManager();
         processors = new ArrayList<Processor>();
@@ -123,7 +123,7 @@ public class Application
         return consoleManager;
     }
 
-    public CommandManager getCommandManager() 
+    public ScriptsManager getScriptsManager() 
     {
         return commandManager;
     }

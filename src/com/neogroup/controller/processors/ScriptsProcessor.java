@@ -5,7 +5,7 @@ import com.neogroup.controller.ConsoleManager;
 import java.io.PrintStream;
 import java.util.List;
 
-public class CommandsProcessor extends Processor implements ConsoleManager.ConsoleListener
+public class ScriptsProcessor extends Processor implements ConsoleManager.ConsoleListener
 {
     @Override
     public void onStarted()
@@ -24,18 +24,18 @@ public class CommandsProcessor extends Processor implements ConsoleManager.Conso
     {
         if (command.equals("setLocalScriptsDir"))
         {
-            getCommandManager().setLocalScriptsDir(commandArguments.get(0));
+            getScriptsManager().setLocalScriptsDir(commandArguments.get(0));
             out.println ("Commands local scripts dir modified successfully !!");;
         }
         else if (command.equals("setScriptName"))
         {
-            getCommandManager().setScriptName(commandArguments.get(0));
+            getScriptsManager().setScriptName(commandArguments.get(0));
             out.println ("Commands script name modified successfully !!");;
         } 
         else if (command.equals("status")) 
         {
-            out.println ("Scripts local dir: " + getCommandManager().getLocalScriptsDir());
-            out.println ("Scripts filename: " + getCommandManager().getScriptName());
+            out.println ("Scripts local dir: " + getScriptsManager().getLocalScriptsDir());
+            out.println ("Scripts filename: " + getScriptsManager().getScriptName());
         }
     }
 }

@@ -40,7 +40,7 @@ public class DeviceProcessor extends Processor implements ConnectionListener, Co
         if (!connection.isLocal())
         {
             String datagram = StringUtils.getHexStringFromByteArray(data, length);
-            String responseDatagram = getCommandManager().executeAction("device/" + getApplication().getName() + "/notifyPackage", datagram);
+            String responseDatagram = getScriptsManager().executeAction("device/" + getApplication().getName() + "/notifyPackage", datagram);
             try
             {
                 sendPackage(responseDatagram, connection);

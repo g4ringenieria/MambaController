@@ -2,7 +2,7 @@
 package com.neogroup.controller.processors;
 
 import com.neogroup.controller.Application;
-import com.neogroup.controller.CommandManager;
+import com.neogroup.controller.ScriptsManager;
 import com.neogroup.controller.ConnectionManager;
 import com.neogroup.controller.ConsoleManager;
 import java.util.logging.Logger;
@@ -36,9 +36,9 @@ public abstract class Processor
         return getApplication().getConsoleManager();
     }
     
-    protected CommandManager getCommandManager()
+    protected ScriptsManager getScriptsManager()
     {
-        return getApplication().getCommandManager();
+        return getApplication().getScriptsManager();
     }
     
     public final void start ()

@@ -4,12 +4,12 @@ package com.neogroup.controller;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class CommandManager 
+public class ScriptsManager 
 {
     private String localScriptsDir;
     private String scriptName;
     
-    public CommandManager ()
+    public ScriptsManager ()
     {
         localScriptsDir = "./";
         scriptName = "executeAction.php";
