@@ -11,7 +11,7 @@ public class CommandManager
     
     public CommandManager ()
     {
-        localScriptsDir = "./";
+        localScriptsDir = "../../NeoGroup/";
         scriptName = "executeAction.php";
     }
 

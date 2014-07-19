@@ -24,7 +24,7 @@ public class Application
     private ConsoleManager consoleManager;
     private CommandManager commandManager;
     private Logger logger;
-    private String actionName;
+    private String name;
     private List<Processor> processors;
     
     public static Application getInstance ()
@@ -37,7 +37,7 @@ public class Application
         try
         {
             int port = Integer.parseInt(args[0]);
-            getInstance().setActionName(args[1]);
+            getInstance().setName(args[1]);
             getInstance().getConnectionManager().setPort(port);
             getInstance().addProcessor(new GeneralProcessor());
             getInstance().addProcessor(new ConnectionsProcessor());
@@ -47,7 +47,7 @@ public class Application
         }
         catch (Exception ex)
         {
-            System.out.println ("Error: " + ex.toString() + "\nUSAGE: java -jar NeoGroupController.jar PORT ACTIONNAME");
+            System.out.println ("Error: " + ex.toString() + "\nUSAGE: java -jar Controller.jar PORT ACTIONNAME");
             System.exit(1);
         }
     }
@@ -103,14 +103,14 @@ public class Application
         getLogger().info("Controller finalized !!");
     }
     
-    public String getActionName() 
+    public String getName() 
     {
-        return actionName;
+        return name;
     }
 
-    public void setActionName(String actionName) 
+    public void setName(String actionName)
     {
-        this.actionName = actionName;
+        this.name = actionName;
     }
     
     public ConnectionManager getConnectionManager ()
