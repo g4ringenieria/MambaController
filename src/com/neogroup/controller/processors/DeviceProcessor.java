@@ -2,13 +2,10 @@ package com.neogroup.controller.processors;
 
 import com.neogroup.controller.Connection;
 import com.neogroup.controller.Connection.ConnectionListener;
+import com.neogroup.utils.StringUtils;
 
-public abstract class DeviceProcessor extends Processor implements ConnectionListener
-{
-    protected static final int REPORTTYPE_POLL = 1;
-    protected static final int REPORTTYPE_TIMEREPORT = 2;
-    protected static final int REPORTTYPE_DISTANCEREPORT = 3;
-       
+public class DeviceProcessor extends Processor implements ConnectionListener
+{ 
     @Override
     public void onStarted() 
     {
@@ -36,7 +33,21 @@ public abstract class DeviceProcessor extends Processor implements ConnectionLis
     {
         if (!connection.isLocal())
         {
-            datagramReceived(connection, data, length);
+            String datagram = StringUtils.getHexStringFromByteArray(data, length);
+            String response = getCommandManager().executeAction(getApplication().getActionName(), datagram);
+            if (!response.isEmpty())
+            {
+                if (connection.getIdentifier() < 0)
+                {
+                    String idField = response.substring(0, 4);
+                    int identifier = Integer.parseInt(idField, 16);
+                    connection.setIdentifier(identifier);
+                }
+                
+                String responseDatagram = response.substring(4);
+                if (!responseDatagram.isEmpty())
+                    connection.sendData(StringUtils.getByteArrayFromHexString(responseDatagram));
+            }
         }
     }
 
@@ -44,6 +55,4 @@ public abstract class DeviceProcessor extends Processor implements ConnectionLis
     public void onConnectionDataSent(Connection connection, byte[] data, int length) throws Exception 
     {
     }
-    
-    protected abstract void datagramReceived (Connection connection, byte[] data, int length) throws Exception;
 }

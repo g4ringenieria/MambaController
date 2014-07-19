@@ -22,17 +22,7 @@ public class CommandsProcessor extends Processor implements ConsoleManager.Conso
     @Override
     public void onCommandEntered(String command, List<String> commandArguments, PrintStream out)
     {
-        if (command.equals("enableCommandsDebug"))
-        {
-            getCommandManager().setDebugMode(true);
-            out.println ("Commands debug enabled !!");;
-        }
-        else if (command.equals("disableCommandsDebug"))
-        {
-            getCommandManager().setDebugMode(false);
-            out.println ("Commands debug disabled !!");;
-        }
-        else if (command.equals("setLocalScriptsDir"))
+        if (command.equals("setLocalScriptsDir"))
         {
             getCommandManager().setLocalScriptsDir(commandArguments.get(0));
             out.println ("Commands local scripts dir modified successfully !!");;
@@ -44,7 +34,6 @@ public class CommandsProcessor extends Processor implements ConsoleManager.Conso
         } 
         else if (command.equals("status")) 
         {
-            out.println ("Scripts debug mode: " + (getCommandManager().isDebugMode()?"true":"false"));
             out.println ("Scripts local dir: " + getCommandManager().getLocalScriptsDir());
             out.println ("Scripts filename: " + getCommandManager().getScriptName());
         }

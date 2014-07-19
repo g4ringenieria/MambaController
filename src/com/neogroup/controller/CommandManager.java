@@ -8,13 +8,11 @@ public class CommandManager
 {
     private String localScriptsDir;
     private String scriptName;
-    private boolean debugMode;
     
     public CommandManager ()
     {
-        localScriptsDir = "../../NeoGroup/";
-        scriptName = "command.php";
-        debugMode = false;
+        localScriptsDir = "./";
+        scriptName = "executeAction.php";
     }
 
     public String getLocalScriptsDir() 
@@ -37,17 +35,7 @@ public class CommandManager
         this.scriptName = scriptName;
     }
 
-    public boolean isDebugMode() 
-    {
-        return debugMode;
-    }
-
-    public void setDebugMode(boolean debugMode) 
-    {
-        this.debugMode = debugMode;
-    }
-    
-    public void executeAction (String action, String... arguments) throws Exception
+    public String executeAction (String action, String... arguments) throws Exception
     {    
         String[] tokens = new String[arguments.length + 3];
         tokens[0] = "php";
@@ -56,57 +44,20 @@ public class CommandManager
         int index = 3;
         for (String argument : arguments)
             tokens[index++] = argument;
+        Process process = Runtime.getRuntime().exec(tokens);
+        process.waitFor();
         
-        if (debugMode)
+        String responseLine;
+        StringBuilder response = new StringBuilder();
+        BufferedReader inputReader = null;
+        try
         {
-            StringBuilder debugString = new StringBuilder();
-            debugString.append("Executing command: \"");
-            boolean first = true;
-            for (String token : tokens)
-            {
-                if (!first)
-                    debugString.append (' ');
-                debugString.append (token);
-                first = false;
-            }
-            debugString.append("\" response: \"");
-            
-            Process process = Runtime.getRuntime().exec(tokens);
-            process.waitFor();
-            String line;
-            
-            BufferedReader errorReader = null;
-            try
-            {
-                errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                while((line = errorReader.readLine()) != null)
-                    debugString.append(line);
-            }
-            catch (Exception ex)
-            {
-                try { errorReader.close(); } catch (Exception ex1) {}
-                errorReader = null;
-            }
-            
-            BufferedReader inputReader = null;
-            try
-            {
-                inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                while((line=inputReader.readLine()) != null)
-                    debugString.append(line);
-            }
-            catch (Exception ex)
-            {
-                try { inputReader.close(); } catch (Exception ex2) {}
-                inputReader = null;
-            }
-            
-            debugString.append("\"");
-            Application.getInstance().getLogger().info(debugString.toString());
+            inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            while ((responseLine = inputReader.readLine()) != null)
+                response.append(responseLine);
         }
-        else
-        {
-            Runtime.getRuntime().exec(tokens);
-        }
+        catch (Exception ex) {}
+        try { inputReader.close(); } catch (Exception ex) {}
+        return response.toString();
     }
 }

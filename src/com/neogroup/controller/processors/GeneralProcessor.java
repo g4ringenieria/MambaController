@@ -26,9 +26,5 @@ public class GeneralProcessor extends Processor implements ConsoleManager.Consol
         {
             getApplication().destroy();
         }
-        else if (command.equals("status")) 
-        {
-            out.println ("Controller model name: " + getApplication().getName());
-        }
     }
 }

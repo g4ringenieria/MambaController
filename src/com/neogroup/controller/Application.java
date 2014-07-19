@@ -3,6 +3,7 @@ package com.neogroup.controller;
 
 import com.neogroup.controller.processors.CommandsProcessor;
 import com.neogroup.controller.processors.ConnectionsProcessor;
+import com.neogroup.controller.processors.DeviceProcessor;
 import com.neogroup.controller.processors.GeneralProcessor;
 import com.neogroup.controller.processors.Processor;
 import java.io.PrintWriter;
@@ -23,7 +24,7 @@ public class Application
     private ConsoleManager consoleManager;
     private CommandManager commandManager;
     private Logger logger;
-    private String name;
+    private String actionName;
     private List<Processor> processors;
     
     public static Application getInstance ()
@@ -35,20 +36,18 @@ public class Application
     {
         try
         {
-            int port = Integer.parseInt(args[0]);   
-            String modelType = args[1];
-            modelType = Character.toString(modelType.charAt(0)).toUpperCase() + modelType.substring(1);
-            getInstance().setName(modelType);
+            int port = Integer.parseInt(args[0]);
+            getInstance().setActionName(args[1]);
             getInstance().getConnectionManager().setPort(port);
             getInstance().addProcessor(new GeneralProcessor());
             getInstance().addProcessor(new ConnectionsProcessor());
             getInstance().addProcessor(new CommandsProcessor());
-            getInstance().addProcessor((Processor)Class.forName("com.neogroup.controller.processors." + modelType + "DeviceProcessor").newInstance());
+            getInstance().addProcessor(new DeviceProcessor());
             getInstance().start();  
         }
         catch (Exception ex)
         {
-            System.out.println ("Error: " + ex.toString() + "\nUSAGE: java -jar NeoGroupController.jar PORT MODELTYPE");
+            System.out.println ("Error: " + ex.toString() + "\nUSAGE: java -jar NeoGroupController.jar PORT ACTIONNAME");
             System.exit(1);
         }
     }
@@ -104,14 +103,14 @@ public class Application
         getLogger().info("Controller finalized !!");
     }
     
-    public String getName() 
+    public String getActionName() 
     {
-        return name;
+        return actionName;
     }
 
-    public void setName(String name) 
+    public void setActionName(String actionName) 
     {
-        this.name = name;
+        this.actionName = actionName;
     }
     
     public ConnectionManager getConnectionManager ()
@@ -146,7 +145,7 @@ public class Application
             logger = Logger.getLogger(this.getClass().getName());
             try
             {   
-                FileHandler handler = new FileHandler("log_" + getName() + ".txt", 1024000, 1, true);
+                FileHandler handler = new FileHandler("log.txt", 1024000, 1, true);
                 handler.setFormatter(new Formatter() 
                 {       
                     private final Date date = new Date();
