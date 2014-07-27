@@ -109,6 +109,21 @@ public class ConnectionsProcessor extends Processor implements ConsoleManager.Co
                 }
             }
         }
+        else if (command.equals("setConnectionTimeout") || command.equals("scto"))
+        {
+            int connectionIdIndex = commandArguments.indexOf("-c") + 1;
+            int timeoutIndex = commandArguments.indexOf("-t") + 1;
+            try
+            {
+                int connectionId = Integer.parseInt(commandArguments.get(connectionIdIndex));
+                getConnectionManager().getConnection(connectionId).setInactivityTimeout(Integer.parseInt(commandArguments.get(timeoutIndex)));
+                out.println ("Connection timeout changed succesfully !!");
+            }
+            catch (Exception ex)
+            {
+                out.println ("Error changing connection timeout: " + ex.getMessage());
+            }
+        }
         else if (command.equals("status")) 
         {
             out.println ("Connections debug mode: " + (getConnectionManager().isLogging()?"true":"false"));

@@ -5,6 +5,7 @@ import com.neogroup.utils.StringUtils;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.EventListener;
 import javax.swing.event.EventListenerList;
 
@@ -18,7 +19,7 @@ public class Connection extends Thread
     private DataInputStream input;
     private boolean local;
     
-    public Connection (Socket socket)
+    public Connection (Socket socket) throws SocketException
     {
         this.identifier = -1;
         this.socket = socket;
@@ -41,6 +42,7 @@ public class Connection extends Thread
         boolean handlerOpen = false;
         try
         {   
+            socket.setSoTimeout(600000);
             output = new DataOutputStream(socket.getOutputStream());
             input = new DataInputStream(socket.getInputStream());
             handlerOpen = true;
@@ -92,6 +94,16 @@ public class Connection extends Thread
             try { socket.close(); } catch (Exception ex) {}
             socket = null;
         }
+    }
+    
+    public void setInactivityTimeout (int timeout) throws SocketException
+    {
+        this.socket.setSoTimeout(timeout * 1000);
+    }
+    
+    public int getInactivityTimeout () throws SocketException
+    {
+        return this.socket.getSoTimeout() / 1000;
     }
 
     public boolean isLocal() 
