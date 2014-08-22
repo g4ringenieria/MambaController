@@ -238,6 +238,8 @@ public class Connection extends Thread
     public String toString ()
     {
         String connectionId = "";
+        if (adminMode)
+            connectionId += "~";
         connectionId += "[" + this.getId() + "]=>";
         connectionId += (this.identifier > 0)? this.identifier : "?";
         connectionId += "@";
