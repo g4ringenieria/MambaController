@@ -43,14 +43,11 @@ public class DeviceProcessor extends Processor implements ConnectionListener, Co
             String responseDatagram = getScriptsManager().executeAction("device/" + getApplication().getName() + "/notifyPackage", datagram);
             if (!responseDatagram.isEmpty())
             {
-                try
-                {
-                    sendPackage(responseDatagram, connection);
-                }
-                catch (Exception exception)
-                {
-                    getLogger().warning("Datagram \"" + responseDatagram + "\" could not be sent !!. " + exception.getMessage());
-                }
+                if (connection.getIdentifier() < 0)
+                    connection.setIdentifier(Integer.parseInt(responseDatagram.substring(0, 4), 16));
+                String responseData = responseDatagram.substring(4);
+                if (!responseData.isEmpty())
+                    sendPackage(responseData, connection);
             }
         }
     }
@@ -65,15 +62,15 @@ public class DeviceProcessor extends Processor implements ConnectionListener, Co
     {
         if (command.equals("sendPackage") || command.equals("sp"))
         {
-            if (commandArguments.size() == 0)
+            if (commandArguments.size() < 2)
             {
-                out.println ("USAGE: sendPackage [HEXAPACKAGE]");
+                out.println ("USAGE: sendPackage [HEXAPACKAGE] [IDENTIFIER]");
             }
             else
             {
                 try
                 {
-                    sendPackage (commandArguments.get(0));
+                    sendPackage (commandArguments.get(0), Integer.parseInt(commandArguments.get(1)));
                     out.println ("Package sent succesfully !!");
                 }
                 catch (Exception ex)
@@ -84,30 +81,16 @@ public class DeviceProcessor extends Processor implements ConnectionListener, Co
         }
     }
     
-    public void sendPackage (String datagram) throws Exception
+    public void sendPackage (String data, int connectionIdentifier) throws Exception
     {
-        String idField = datagram.substring(0, 4);
-        int identifier = Integer.parseInt(idField, 16);
-        Connection connection = getConnectionManager().getConnectionByIdentifier(identifier);
+        Connection connection = getConnectionManager().getConnectionByIdentifier(connectionIdentifier);
         if (connection == null)
-            throw new Exception ("No connection with identifier \"" + identifier + "\"");
-        sendPackage (datagram, connection);
+            throw new Exception ("No connection with identifier \"" + connectionIdentifier + "\"");
+        sendPackage (data, connection);
     }
     
-    public void sendPackage (String datagram, Connection connection) throws Exception
+    public void sendPackage (String data, Connection connection) throws Exception
     {
-        if (datagram.isEmpty())
-            throw new Exception ("Datagram is empty !!");
-         
-        if (connection.getIdentifier() < 0)
-        {
-            String idField = datagram.substring(0, 4);
-            int identifier = Integer.parseInt(idField, 16);
-            connection.setIdentifier(identifier);
-        }
-        
-        String datagramPackage = datagram.substring(4);
-        if (!datagramPackage.isEmpty())
-            connection.sendData(StringUtils.getByteArrayFromHexString(datagramPackage));
+        connection.sendData(StringUtils.getByteArrayFromHexString(data));
     }
 }
