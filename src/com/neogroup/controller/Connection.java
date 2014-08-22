@@ -17,14 +17,14 @@ public class Connection extends Thread
     private final String socketAddress;
     private DataOutputStream output;
     private DataInputStream input;
-    private boolean local;
+    private boolean adminMode;
     
     public Connection (Socket socket) throws SocketException
     {
         this.identifier = -1;
         this.socket = socket;
         this.socketAddress = socket.getInetAddress().getHostAddress();
-        this.local = (socketAddress.equals("127.0.0.1") || socketAddress.equals("localhost"));
+        this.adminMode = (socketAddress.equals("127.0.0.1") || socketAddress.equals("localhost"));
     }
     
     @Override
@@ -106,14 +106,14 @@ public class Connection extends Thread
         return this.socket.getSoTimeout() / 1000;
     }
 
-    public boolean isLocal() 
+    public boolean isAdminMode() 
     {
-        return local;
+        return adminMode;
     }
 
-    public void setLocal(boolean local) 
+    public void setAdminMode(boolean adminMode) 
     {
-        this.local = local;
+        this.adminMode = adminMode;
     }
     
     public void sendData (byte[] dataToSend) throws Exception

@@ -135,15 +135,30 @@ public class ConnectionsProcessor extends Processor implements ConsoleManager.Co
     @Override
     public void onConnectionDataReceived(Connection connection, byte[] data, int length) throws Exception 
     {
-        if (connection.isLocal())
+        if (connection.isAdminMode())
         {
             String command = new String(data, 0, length);
             command = command.trim();
             PrintStream out = new PrintStream(connection.getOutput());
-            if (command.equals("emulateDevice"))
+            if (command.equals("dataMode"))
             {
-                connection.setLocal(false);
-                out.println ("Device emulation activated !!");
+                connection.setAdminMode(false);
+                out.println ("Connection in data mode !!");
+            }
+            else
+            {
+                getConsoleManager().processCommand(command, out);
+            }
+        }
+        else
+        {
+            String command = new String(data, 0, length);
+            command = command.trim();
+            PrintStream out = new PrintStream(connection.getOutput());
+            if (command.equals("adminMode"))
+            {
+                connection.setAdminMode(true);
+                out.println ("Connection in admin mode !!");
             }
             else
             {

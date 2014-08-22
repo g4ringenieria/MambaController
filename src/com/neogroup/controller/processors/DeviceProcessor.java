@@ -37,7 +37,7 @@ public class DeviceProcessor extends Processor implements ConnectionListener, Co
     @Override
     public void onConnectionDataReceived(Connection connection, byte[] data, int length) throws Exception 
     {
-        if (!connection.isLocal())
+        if (!connection.isAdminMode())
         {
             String datagram = (connection.getIdentifier() >= 0? StringUtils.padLeft(Integer.toHexString(connection.getIdentifier()), 4, '0') : "0000") + StringUtils.getHexStringFromByteArray(data, length);
             String responseDatagram = getScriptsManager().executeAction("device/" + getApplication().getName() + "/notifyPackage", datagram);
