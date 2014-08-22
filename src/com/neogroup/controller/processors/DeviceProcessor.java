@@ -86,32 +86,26 @@ public class DeviceProcessor extends Processor implements ConnectionListener, Co
     
     public void sendPackage (String datagram) throws Exception
     {
-        sendPackage (datagram, null);
+        String idField = datagram.substring(0, 4);
+        int identifier = Integer.parseInt(idField, 16);
+        Connection connection = getConnectionManager().getConnectionByIdentifier(identifier);
+        if (connection == null)
+            throw new Exception ("No connection with identifier \"" + identifier + "\"");
+        sendPackage (datagram, connection);
     }
     
     public void sendPackage (String datagram, Connection connection) throws Exception
     {
         if (datagram.isEmpty())
             throw new Exception ("Datagram is empty !!");
-                    
-        if (connection != null)
-        {
-            if (connection.getIdentifier() < 0)
-            {
-                String idField = datagram.substring(0, 4);
-                int identifier = Integer.parseInt(idField, 16);
-                connection.setIdentifier(identifier);
-            }
-        }
-        else
+         
+        if (connection.getIdentifier() < 0)
         {
             String idField = datagram.substring(0, 4);
             int identifier = Integer.parseInt(idField, 16);
-            connection = getConnectionManager().getConnectionByIdentifier(identifier);
-            if (connection == null)
-                throw new Exception ("No connection with identifier \"" + identifier + "\"");
+            connection.setIdentifier(identifier);
         }
-
+        
         String datagramPackage = datagram.substring(4);
         if (!datagramPackage.isEmpty())
             connection.sendData(StringUtils.getByteArrayFromHexString(datagramPackage));
