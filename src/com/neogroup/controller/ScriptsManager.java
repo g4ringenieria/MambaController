@@ -6,15 +6,54 @@ import java.io.InputStreamReader;
 
 public class ScriptsManager 
 {
+    public static final int MODE_LOCAL = 0;
+    public static final int MODE_REMOTE = 0;
+    
+    private int mode;
+    private String host;
+    private int port;
     private String localScriptsDir;
-    private String scriptName;
+    private String localScriptsFilename;
     
     public ScriptsManager ()
     {
+        mode = MODE_LOCAL;
+        host = "localhost";
+        port = 80;
         localScriptsDir = "./";
-        scriptName = "executeAction.php";
+        localScriptsFilename = "executeAction.php";
     }
 
+    public String getHost() 
+    {
+        return host;
+    }
+
+    public void setHost(String host) 
+    {
+        this.host = host;
+    }
+
+    public int getPort() 
+    {
+        return port;
+    }
+
+    public void setPort(int port) 
+    {
+        this.port = port;
+    }
+
+    public int getMode() 
+    {
+        return mode;
+    }
+
+    public void setMode(int mode) 
+    {
+        this.mode = mode;
+    }
+    
     public String getLocalScriptsDir() 
     {
         return localScriptsDir;
@@ -25,39 +64,41 @@ public class ScriptsManager
         this.localScriptsDir = baseScriptsDir;
     }
 
-    public String getScriptName() 
+    public String getLocalScriptsFilename() 
     {
-        return scriptName;
+        return localScriptsFilename;
     }
 
-    public void setScriptName(String scriptName) 
+    public void setLocalScriptsFilename(String localScriptsFilename)
     {
-        this.scriptName = scriptName;
+        this.localScriptsFilename = localScriptsFilename;
     }
 
     public String executeAction (String action, String... arguments) throws Exception
     {    
-        String[] tokens = new String[arguments.length + 3];
-        tokens[0] = "php";
-        tokens[1] = localScriptsDir + scriptName;
-        tokens[2] = action;
-        int index = 3;
-        for (String argument : arguments)
-            tokens[index++] = argument;
-        Process process = Runtime.getRuntime().exec(tokens);
-        process.waitFor();
-        
-        String responseLine;
         StringBuilder response = new StringBuilder();
-        BufferedReader inputReader = null;
-        try
+        if (mode == MODE_LOCAL)
         {
-            inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            while ((responseLine = inputReader.readLine()) != null)
-                response.append(responseLine);
+            String[] tokens = new String[arguments.length + 3];
+            tokens[0] = "php";
+            tokens[1] = localScriptsDir + localScriptsFilename;
+            tokens[2] = action;
+            int index = 3;
+            for (String argument : arguments)
+                tokens[index++] = argument;
+            Process process = Runtime.getRuntime().exec(tokens);
+            process.waitFor();
+            String responseLine;
+            BufferedReader inputReader = null;
+            try
+            {
+                inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                while ((responseLine = inputReader.readLine()) != null)
+                    response.append(responseLine);
+            }
+            catch (Exception ex) {}
+            try { inputReader.close(); } catch (Exception ex) {}
         }
-        catch (Exception ex) {}
-        try { inputReader.close(); } catch (Exception ex) {}
         return response.toString();
     }
 }

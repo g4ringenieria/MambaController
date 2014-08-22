@@ -25,17 +25,17 @@ public class ScriptsProcessor extends Processor implements ConsoleManager.Consol
         if (command.equals("setLocalScriptsDir"))
         {
             getScriptsManager().setLocalScriptsDir(commandArguments.get(0));
-            out.println ("Commands local scripts dir modified successfully !!");;
+            out.println ("Local scripts dir modified successfully !!");;
         }
-        else if (command.equals("setScriptName"))
+        else if (command.equals("setLocalScriptsFilename"))
         {
-            getScriptsManager().setScriptName(commandArguments.get(0));
-            out.println ("Commands script name modified successfully !!");;
+            getScriptsManager().setLocalScriptsFilename(commandArguments.get(0));
+            out.println ("Local script filename modified successfully !!");;
         } 
         else if (command.equals("status")) 
         {
             out.println ("Scripts local dir: " + getScriptsManager().getLocalScriptsDir());
-            out.println ("Scripts filename: " + getScriptsManager().getScriptName());
+            out.println ("Scripts filename: " + getScriptsManager().getLocalScriptsFilename());
         }
     }
 }
