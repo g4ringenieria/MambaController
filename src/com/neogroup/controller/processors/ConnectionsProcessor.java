@@ -160,10 +160,6 @@ public class ConnectionsProcessor extends Processor implements ConsoleManager.Co
                 connection.setAdminMode(true);
                 out.println ("Connection in admin mode !!");
             }
-            else
-            {
-                getConsoleManager().processCommand(command, out);
-            }
         }
     }
 
