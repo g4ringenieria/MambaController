@@ -10,6 +10,10 @@ import java.util.List;
 
 public class DeviceProcessor extends Processor implements ConnectionListener, ConsoleManager.ConsoleListener
 { 
+    private static final String FRAME_START = "00";
+    private static final String FRAME_STATUSSUCCESS = "01";
+    private static final String FRAME_STATUSFAILURE = "02";
+    
     @Override
     public void onStarted() 
     {
@@ -39,15 +43,24 @@ public class DeviceProcessor extends Processor implements ConnectionListener, Co
     {
         if (!connection.isAdminMode())
         {
-            String datagram = (connection.getIdentifier() >= 0? StringUtils.padLeft(Integer.toHexString(connection.getIdentifier()), 4, '0') : "0000") + StringUtils.getHexStringFromByteArray(data, length);
+            String datagram = FRAME_START + FRAME_STATUSSUCCESS + (connection.getIdentifier() >= 0? StringUtils.padLeft(Integer.toHexString(connection.getIdentifier()), 4, '0') : "0000") + StringUtils.getHexStringFromByteArray(data, length);
             String responseDatagram = getScriptsManager().executeAction("device/" + getApplication().getName() + "/notifyPackage", datagram);
-            if (!responseDatagram.isEmpty())
+            if (responseDatagram.isEmpty())
+                throw new Exception ("No response for datagram");
+            if (!responseDatagram.startsWith(FRAME_START))
+                throw new Exception ("Unrecognized response");
+            String status = responseDatagram.substring(2, 4);
+            if (status.equals(FRAME_STATUSSUCCESS))
             {
                 if (connection.getIdentifier() < 0)
-                    connection.setIdentifier(Integer.parseInt(responseDatagram.substring(0, 4), 16));
-                String responseData = responseDatagram.substring(4);
+                    connection.setIdentifier(Integer.parseInt(responseDatagram.substring(4, 8), 16));
+                String responseData = responseDatagram.substring(8);
                 if (!responseData.isEmpty())
                     sendPackage(responseData, connection);
+            }
+            else if (status.equals(FRAME_STATUSFAILURE))
+            {
+                throw new Exception ("Failed processing datagram. Error: " + new String(StringUtils.getByteArrayFromHexString(responseDatagram.substring(4))));
             }
         }
     }
